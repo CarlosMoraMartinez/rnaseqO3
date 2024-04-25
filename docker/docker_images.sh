@@ -10,6 +10,11 @@ sudo docker pull staphb/samtools:latest
 sudo docker pull pipecraft/cutadapt:0
 sudo docker pull docker pull nanozoo/bbmap:38.86--9ebcbfa
 #sudo docker pull staphb/bbtools # Falla, parece que necesita instalar dependencias
+
+sudo docker pull nanozoo/hisat2:2.1.0--66dae66 #2.1.0
+sudo docker pull nanozoo/hisat2:2.2.1--75357cd # version 2.2.1
+
+
 # Install metaphlan database in permanent location:
 # sudo docker run -ti --mount type=bind,source=/home,target=/home --entrypoint /bin/bash staphb/metaphlan
 # metaphlan --install --bowtie2db /home/ccarlos/data/resources/metaphlan

@@ -1,7 +1,7 @@
 
 
 include { CLEANFASTQ } from './workflows/cleanfastqwf.nf'
-
+include { ALIGN } from './workflows/alignwf.nf'
 
 workflow {
 
@@ -19,12 +19,13 @@ workflow {
       ch_fastqc = CLEANFASTQ.out.ch_fastqc
     }else{
       print "Skipping CLEANFASTQ. Taking raw fastq as final fastq."
-      ch_fastq_filtered = ch_rawfastq
-
+      ch_fastq_processed_paired = ch_rawfastq
       ch_fastq_processed  = Channel.from([])
-      ch_fastq_processed_paired = Channel.from([])
       ch_fastqc = Channel.from([])
     }
+
+   ALIGN(ch_fastq_processed_paired)
+
    ////Call kraken workflow
    //if(params.workflows.doKraken2Bracken){
    //   KRAKEN2BRACKEN(ch_fastq_filtered)

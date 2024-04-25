@@ -12,20 +12,20 @@ workflow CLEANFASTQ {
   main:
  //Trim reads
   ch_fastq_processed = ch_rawfastq
-  if(params.doTrimmomatic.do_trim && params.workflows.trimming_tool == "trimmomatic" ){ //With trimmomatic
+  if(params.workflows.do_trim && params.workflows.trimming_tool == "trimmomatic" ){ //With trimmomatic
     doTrimmomatic(ch_rawfastq)
     ch_fastq_processed = doTrimmomatic.out
      .view{ "Illumina trimmed reads with Trimmomatic: $it" }
      ch_fastq_processed_paired = ch_fastq_processed.map{it -> tuple(it[0], it[1])}
      .view{ "trimmed fastq paired only: $it" }
-  }else if (params.doCutadapt.do_trim && params.workflows.trimming_tool == "cutadapt" ){ //With cutadapt
+  }else if (params.workflows.do_trim && params.workflows.trimming_tool == "cutadapt" ){ //With cutadapt
      doCutadapt(ch_rawfastq)
     ch_fastq_processed = doCutadapt.out
      .view{ "Illumina trimmed reads with Cutadapt: $it" }
      ch_fastq_processed_paired = ch_fastq_processed.map{it -> tuple(it[0], it[1])}
      .view{ "trimmed fastq paired only: $it" } 
    
-  }else if (params.doBBduk.do_trim && params.workflows.trimming_tool == "bbduk" ){ //With bbduk
+  }else if (params.workflows.do_trim && params.workflows.trimming_tool == "bbduk" ){ //With bbduk
      doBBduk(ch_rawfastq)
     ch_fastq_processed = doBBduk.out
      .view{ "Illumina trimmed reads with BBduk: $it" }
