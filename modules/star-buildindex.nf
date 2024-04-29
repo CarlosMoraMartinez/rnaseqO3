@@ -7,7 +7,7 @@ process buildindexSTAR{
   clusterOptions params.resources.buildindexSTAR.clusterOptions
   errorStrategy { task.exitStatus in 1..2 ? 'retry' : 'ignore' }
   maxRetries 10
-  publishDir "$results_dir/mg02_star_buildindex", mode: 'symlink'
+  publishDir "$results_dir/mg00_star_buildindex", mode: 'symlink'
   input:
   tuple(index_name)
   
@@ -25,4 +25,5 @@ process buildindexSTAR{
 --genomeSAindexNbases !{params.resources.alignSTAR.genomeSAindexNbases} \
 --sjdbOverhang !{params.resources.alignSTAR.sjdbOverhang} #99 o 100
   '''
+  
 }

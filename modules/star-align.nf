@@ -23,7 +23,7 @@ process alignSTAR{
   --readFilesIn !{fastq[0]},!{fastq[1]}  \
   --outSAMtype BAM SortedByCoordinate \
   --outFileNamePrefix !{sample_id}_
-  #samtools index !{sample_id}_Aligned.sortedByCoord.out.bam
+  samtools index !{sample_id}_Aligned.sortedByCoord.out.bam
 
   '''
   stub:
