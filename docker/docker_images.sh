@@ -14,7 +14,7 @@ sudo docker pull docker pull nanozoo/bbmap:38.86--9ebcbfa
 sudo docker pull nanozoo/hisat2:2.1.0--66dae66 #2.1.0
 sudo docker pull nanozoo/hisat2:2.2.1--75357cd # version 2.2.1
 
-
+sudo docker pull mpgagebioinformatics/star:2.7.11b
 # Install metaphlan database in permanent location:
 # sudo docker run -ti --mount type=bind,source=/home,target=/home --entrypoint /bin/bash staphb/metaphlan
 # metaphlan --install --bowtie2db /home/ccarlos/data/resources/metaphlan

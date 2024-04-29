@@ -9,7 +9,7 @@ RUN wget https://github.com/alexdobin/STAR/archive/2.7.11b.tar.gz  && \
 
 WORKDIR STAR-2.7.11b/source
 
-RUN    make STAR && \
+RUN make STAR && \
     mv STAR /usr/local/bin
 
 WORKDIR /

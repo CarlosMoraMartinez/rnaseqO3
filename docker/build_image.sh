@@ -3,8 +3,9 @@
 # sudo vim /etc/docker/daemon.json
 # { "insecure-registries": ["ccarlos.local:5000"] }
 
-sudo docker build -t ccarlos/registry:STAR-2.7.11b -f star_image.dockerfile .
 sudo docker build -t ccarlos/registry:samtools-1.20 -f samtools-1.20_image.dockerfile .
+sudo docker build -t ccarlos/registry:STAR-2.7.11b -f star_image.dockerfile .
+sudo docker build -t ccarlos/registry:HISAT2-2.2.1 -f hisat2-2.2.1_image.dockerfile .
 
 
 
@@ -12,7 +13,7 @@ sudo docker build -t ccarlos/registry:samtools-1.20 -f samtools-1.20_image.docke
 sudo docker run -ti --entrypoint /bin/bash ccarlos/registry:kraken_with_pigz
 
 # Enter and mount your home to the container
-sudo docker run -ti --mount type=bind,source=/home,target=/home  --entrypoint /bin/bash nanozoo/krona
+sudo docker run -ti  --mount type=bind,source=/home,target=/home  --entrypoint /bin/bash ccarlos/registry:HISAT2-2.2.1
 
 # Save images in order to transfer to server
 sudo docker save -o dockerimage_kraken_with_pigz.tar ccarlos/registry:kraken_with_pigz 

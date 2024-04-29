@@ -9,28 +9,35 @@ process alignSTAR{
   maxRetries 10
   publishDir "$results_dir/mg02_star_align", mode: 'symlink'
   input:
+  path(star_index_dir)
   tuple(val(sample_id), path(fastq))
   
   output:
-  tuple(val(sample_id), path('*.bam'), path('*Log.final.out'), path('*Log.out'), path('*Log.progress.out'))
+  tuple(val(sample_id), path('*.bam'), path('*.bai'), path("*_SJ.out.tab"), path('*Log.final.out'), path('*Log.out'), path('*Log.progress.out'), path('*flagstat'))
 
   shell:
   '''
 
   STAR --runThreadN !{params.resources.alignSTAR.cpus} !{params.alignSTAR.options} \
   --readFilesCommand zcat \
-  --genomeDir !{params.resources.alignSTAR.index} \
+  --genomeDir !{star_index_dir} \
   --readFilesIn !{fastq[0]},!{fastq[1]}  \
   --outSAMtype BAM SortedByCoordinate \
   --outFileNamePrefix !{sample_id}_
+  
   samtools index !{sample_id}_Aligned.sortedByCoord.out.bam
+
+  flagstat=!{sample_id}.star.flagstat
+  samtools flagstat !{sample_id}_Aligned.sortedByCoord.out.bam > $flagstat
 
   '''
   stub:
   """
   touch $sample_id'_Aligned.sortedByCoord.out.bam'
+  touch $sample_id'__SJ.out.tab'
   touch $sample_id'_Log.final.out'
   touch $sample_id'_Log.out'
   touch $sample_id'_Log.progress.out'
+  touch $sample_id'.star.flagstat'
   """
 }

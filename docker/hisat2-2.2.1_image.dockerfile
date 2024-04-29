@@ -2,7 +2,11 @@ FROM ccarlos/registry:samtools-1.20
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install unzip
+    apt-get install -y unzip && \
+    apt-get install -y python3.10 && \
+    ln -s /usr/bin/python3.10 /usr/bin/python3 && \
+    ln -s /usr/bin/python3.10 /usr/bin/python
+
 
 
 # From source
