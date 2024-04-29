@@ -3,8 +3,9 @@
 # sudo vim /etc/docker/daemon.json
 # { "insecure-registries": ["ccarlos.local:5000"] }
 
-sudo docker build -t ccarlos/registry:kraken_with_pigz -f kraken_with_pigz.dockerfile .
-sudo docker build -t ccarlos/registry:seqkit_with_samtools -f seqkit_and_samtools.dockerfile .
+sudo docker build -t ccarlos/registry:STAR-2.7.11b -f star_image.dockerfile .
+sudo docker build -t ccarlos/registry:samtools-1.20 -f samtools-1.20_image.dockerfile .
+
 
 
 # Enter to test
