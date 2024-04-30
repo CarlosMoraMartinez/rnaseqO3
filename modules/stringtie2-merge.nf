@@ -21,7 +21,7 @@ process mergeStringtie2{
   errorfile=!{flag}_Stringtie_merge.err
   
   prepDE.py -g $out_genecounts -t $out_transccounts \
-            -l !{params.resources.mergeStringtie2.readlength} 2>$errorfile
+            -l !{params.mergeStringtie2.readlength} 2>$errorfile
   
   sed -i "s/_!{flag}_Stringtie//g" $out_genecounts 
   sed -i "s/_!{flag}_Stringtie//g" $out_transccounts 

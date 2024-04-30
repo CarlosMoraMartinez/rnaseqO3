@@ -18,3 +18,5 @@ sudo docker pull mpgagebioinformatics/star:2.7.11b
 # Install metaphlan database in permanent location:
 # sudo docker run -ti --mount type=bind,source=/home,target=/home --entrypoint /bin/bash staphb/metaphlan
 # metaphlan --install --bowtie2db /home/ccarlos/data/resources/metaphlan
+
+sudo docker pull combinelab/salmon:latest
