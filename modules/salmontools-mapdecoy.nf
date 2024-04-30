@@ -19,7 +19,7 @@ process mapdecoySalmontools{
 
   shell:
   '''
-  generateDecoyTranscriptome.sh -j !{params.resources.mapdecoySalmontools.cpus} -a !{annot} -g !{genome_fasta} -t !{transcripts_fasta} -o name_decoy
+  generateDecoyTranscriptome.sh -j !{params.resources.mapdecoySalmontools.cpus} -a !{annot} -g !{genome_fasta} -t !{transcripts_fasta} -o !{name_decoy}
  
   '''
 }

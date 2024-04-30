@@ -8,7 +8,7 @@ sudo docker build -t ccarlos/registry:STAR-2.7.11b -f star_image.dockerfile .
 sudo docker build -t ccarlos/registry:HISAT2-2.2.1 -f hisat2-2.2.1_image.dockerfile .
 sudo docker build -t ccarlos/registry:htslib-1.20 -f htslib-1.20_image.dockerfile .
 sudo docker build -t ccarlos/registry:stringtie2-v2.2.2 -f stringtie2_image.dockerfile .
-
+sudo docker build -t ccarlos/registry:salmondecoy -f salmontools_generate_decoy_image.dockerfile .
 
 # Enter to test
 sudo docker run -ti --entrypoint /bin/bash ccarlos/registry:kraken_with_pigz

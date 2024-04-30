@@ -13,7 +13,7 @@ process buildindexSalmon{
   val(mode)
   path(genome_fasta)
   path(transcripts_fasta)
-  path(annot)
+  path(decoy)
   
   output:
   path("${index_dir}_${mode}")
@@ -37,5 +37,12 @@ process buildindexSalmon{
 
   rm transcripts_genomedecoy.fasta
  
+  '''
+
+  else if(mode == "partial_decoy")
+  '''
+  outdir=!{index_dir}'_'!{mode}
+
+  salmon index -t !{transcripts_fasta} -i $outdir --decoys !{decoy} -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
   '''
 }
