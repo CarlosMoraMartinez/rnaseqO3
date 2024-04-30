@@ -9,7 +9,7 @@ process quantSalmon{
   maxRetries 10
   publishDir "$results_dir/mg03_salmon_quant", mode: 'symlink'
   input:
-  val(salmon_index)
+  path(salmon_index)
   tuple(val(sample_id), path(fastq))
   
   output:
