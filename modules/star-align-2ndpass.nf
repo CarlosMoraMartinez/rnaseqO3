@@ -1,5 +1,5 @@
 process alignSTAR2ndPass{
-  label 'mg03_star_align_2nd_pass'
+  label 'mg02_star_align_2nd_pass'
   conda params.alignSTAR2ndPass.conda
   cpus params.resources.alignSTAR2ndPass.cpus
   memory params.resources.alignSTAR2ndPass.mem
@@ -7,7 +7,7 @@ process alignSTAR2ndPass{
   clusterOptions params.resources.alignSTAR2ndPass.clusterOptions
   errorStrategy { task.exitStatus in 1..2 ? 'retry' : 'ignore' }
   maxRetries 10
-  publishDir "$results_dir/mg03_star_align_2nd_pass", mode: 'symlink'
+  publishDir "$results_dir/mg02_star_align_2nd_pass", mode: 'symlink'
   input:
   path(star_index_dir)
   tuple(val(sample_id), path(fastq))

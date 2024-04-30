@@ -6,7 +6,8 @@
 sudo docker build -t ccarlos/registry:samtools-1.20 -f samtools-1.20_image.dockerfile .
 sudo docker build -t ccarlos/registry:STAR-2.7.11b -f star_image.dockerfile .
 sudo docker build -t ccarlos/registry:HISAT2-2.2.1 -f hisat2-2.2.1_image.dockerfile .
-
+sudo docker build -t ccarlos/registry:htslib-1.20 -f htslib-1.20_image.dockerfile .
+sudo docker build -t ccarlos/registry:stringtie2-v2.2.2 -f stringtie2_image.dockerfile .
 
 
 # Enter to test
