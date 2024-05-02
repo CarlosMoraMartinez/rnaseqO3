@@ -18,7 +18,7 @@ process quantSalmon{
   shell:
   '''
   outdir=!{sample_id}_salmon
-  errorfile=!{sample_id}.hisat2.err
+  errorfile=!{sample_id}.salmon.err
 
   salmon quant --threads !{params.resources.quantSalmon.cpus} \
       -i !{salmon_index} -l IU !{params.quantSalmon.options} \

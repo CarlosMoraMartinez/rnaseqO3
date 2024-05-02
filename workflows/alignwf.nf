@@ -6,6 +6,7 @@ include { alignSTAR2ndPass } from '../modules/star-align-2ndpass'
 include { quantStringtie2 } from '../modules/stringtie2-quant'
 include { mergeStringtie2 } from '../modules/stringtie2-merge'
 include { quantSalmon } from '../modules/salmon-quant'
+include { quantBamSalmon } from '../modules/salmon-quant-frombam'
 include { mergeSalmon } from '../modules/salmon-merge'
 include { mapdecoySalmontools } from '../modules/salmontools-mapdecoy'
 include { buildindexSalmon } from '../modules/salmon-buildindex'
@@ -159,6 +160,32 @@ workflow ALIGN {
 
   } //if Do salmon
 
+  //Salmon quantify from bam
+  ch_alignment_all_bytrans = Channel.from([])
+  ch_salmon_aln_result = Channel.from([])
+  ch_salmon_aln_names = Channel.from([])
+  ch_salmon_aln_dirs = Channel.from([])
+  if(params.quantBamSalmon.do_salmon){
+      ch_alignment_all_bytrans = ch_star_bam_bytranscript
+      .concat(ch_star_2ndpass_bam_bytranscript)
+      quantBamSalmon(ch_alignment_all_bytrans)
+      ch_salmon_aln_result = quantBamSalmon.out
+      .view{ "Salmon from Alignment results: $it" }
+      //ch_salmon_aln_names = ch_salmon_aln_result.map{it -> it[0]}.collect().map{ it -> it.join(' ')}
+      //ch_salmon_aln_dirs = ch_salmon_aln_result.map{it -> it[1]}.collect()
+      //.view{ "Salmon from Alignment results only dir: $it" }
+  }// Salmon quant from SAM file 
+
+  if(params.quantBamSalmon.do_salmon || params.quantSalmon.do_salmon){
+      ch_salmon_aln_results_grouped = ch_salmon_result.map{it -> tuple("salmon", it[0], it[1])}
+        .concat(ch_salmon_aln_result)
+        .view{ "Salmon ALN concat: $it" }
+        .map{it -> tuple(it[0], tuple(it[2]))}
+        .groupTuple(by: 0)
+        .map{it -> tuple(it[0], it[1].flatten())}
+        .view{ "Salmon ALN results grouped: $it" }
+  }
+
   emit:
   ch_hisat2_result
   ch_hisat2_bam
@@ -169,5 +196,6 @@ workflow ALIGN {
   ch_stringtie_results
   ch_stringtie_results_merged
   ch_salmon_result
+  ch_salmon_aln_result
   ch_salmon_merged
 }
