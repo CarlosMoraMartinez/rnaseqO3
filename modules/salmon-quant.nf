@@ -20,9 +20,9 @@ process quantSalmon{
   outdir=!{sample_id}_salmon
   errorfile=!{sample_id}.hisat2.err
 
-  salmon quant -p !{params.resources.quantSalmon.cpus} \
+  salmon quant --threads !{params.resources.quantSalmon.cpus} \
       -i !{salmon_index} -l IU !{params.quantSalmon.options} \
-      -1 <(gunzip -c !{fastq[0]}) -2 <(gunzip -c !{fastq[1]}) \
+      -1 !{fastq[0]} -2 !{fastq[1]} \
       --validateMappings -o $outdir 2> $errorfile
 
   '''

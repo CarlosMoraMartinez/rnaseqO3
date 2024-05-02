@@ -13,12 +13,24 @@ process alignSTAR{
   tuple(val(sample_id), path(fastq))
   
   output:
-  tuple(val(sample_id), path('*.bam'), path('*.bai'), path("*_SJ.out.tab"), path('*Log.final.out'), path('*Log.out'), path('*Log.progress.out'), path('*flagstat'))
+  tuple(val(sample_id), 
+        path('*Aligned.sortedByCoord.out.bam'), 
+        path('*Aligned.sortedByCoord.out.bam.bai'), 
+        path('*Aligned.toTranscriptome.sorted.bam'), 
+        path('*Aligned.toTranscriptome.sorted.bam.bai'), 
+        path("*_SJ.out.tab"), 
+        path('*Log.final.out'), 
+        path('*Log.out'), 
+        path('*Log.progress.out'),
+        path('*ReadsPerGene.out.tab'),
+        path('*star.flagstat'),
+        path('*star.transcriptome.flagstat'))
 
   shell:
   '''
 
   STAR --runThreadN !{params.resources.alignSTAR.cpus} !{params.alignSTAR.options} \
+  --quantMode TranscriptomeSAM GeneCounts \
   --readFilesCommand zcat \
   --genomeDir !{star_index_dir} \
   --readFilesIn !{fastq[0]},!{fastq[1]}  \
@@ -27,8 +39,15 @@ process alignSTAR{
   
   samtools index !{sample_id}_Aligned.sortedByCoord.out.bam
 
+  sortedbamtranscr=!{sample_id}_Aligned.toTranscriptome.sorted.bam
+  samtools sort !{sample_id}_Aligned.toTranscriptome.out.bam -O bam -o $sortedbamtranscr
+  samtools index $sortedbamtranscr
+
   flagstat=!{sample_id}.star.flagstat
   samtools flagstat !{sample_id}_Aligned.sortedByCoord.out.bam > $flagstat
+
+  flagstat_trans=!{sample_id}.star.transcriptome.flagstat
+  samtools flagstat $sortedbamtranscr > $flagstat_trans
 
   '''
   stub:
