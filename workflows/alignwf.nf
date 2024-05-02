@@ -6,6 +6,7 @@ include { alignSTAR2ndPass } from '../modules/star-align-2ndpass'
 include { quantStringtie2 } from '../modules/stringtie2-quant'
 include { mergeStringtie2 } from '../modules/stringtie2-merge'
 include { quantSalmon } from '../modules/salmon-quant'
+include { mergeSalmon } from '../modules/salmon-merge'
 include { mapdecoySalmontools } from '../modules/salmontools-mapdecoy'
 include { buildindexSalmon } from '../modules/salmon-buildindex'
 
@@ -44,31 +45,41 @@ workflow ALIGN {
 
   if(params.alignSTAR.do_star){ 
     if(params.buildindexSTAR.do_index){
+      
       buildindexSTAR(params.buildindexSTAR.index_name,
-        params.buildindexSTAR.fasta,
-        params.buildindexSTAR.annot)
+                    params.buildindexSTAR.fasta,
+                    params.buildindexSTAR.annot)
+
       ch_star_index = buildindexSTAR.out
        //.view{ "STAR index created: $it" }
     }else{
       ch_star_index = params.alignSTAR.index
     }
-    alignSTAR(ch_star_index, ch_fastq_processed_paired)
+
+    alignSTAR(ch_star_index, 
+              ch_fastq_processed_paired)
+
      ch_star_result = alignSTAR.out
      //.view{ "STAR full result: $it" }
      ch_star_bam = ch_star_result.map{it -> tuple("STAR", it[0], it[1], it[2])}
      //.view{ "STAR BAM only: $it" }
 
-  if(params.alignSTAR2ndPass.do_star){
-    ch_star2ndpass_input_SJ = ch_star_result.map{it -> tuple(it[3])}
-       .collect()
+    if(params.alignSTAR2ndPass.do_star){
+    ch_star2ndpass_input_SJ = ch_star_result
+        .map{it -> tuple(it[3])}
+        .collect()
        //.view{ "STAR splice junctions collect: $it" }
-    alignSTAR2ndPass(ch_star_index, ch_fastq_processed_paired, ch_star2ndpass_input_SJ)
+
+    alignSTAR2ndPass(ch_star_index, 
+                    ch_fastq_processed_paired, 
+                    ch_star2ndpass_input_SJ)
+
     ch_star_2ndpass_result = alignSTAR2ndPass.out
     //.view{ "STAR 2nd PASS full result: $it" }
      ch_star_2ndpass_bam = ch_star_2ndpass_result.map{it -> tuple("STAR2", it[0], it[1], it[2])}
     //.view{ "STAR 2nd PASS BAM only: $it" }
-  }// end STAR
-
+    }// end STAR 2nd pass
+  }
   // Merge alignments
   ch_alignment_all = ch_hisat2_bam
     .concat(ch_star_bam)
@@ -90,7 +101,6 @@ workflow ALIGN {
     ch_stringtie_results_merged = mergeStringtie2.out
       //.view{ "Stringtie merge prepDE.py results: $it" }
   }
-  
   
   if(params.quantSalmon.do_salmon){
     if(params.buildindexSalmon.do_index){
@@ -130,16 +140,20 @@ workflow ALIGN {
          .view{ "Salmon index created: $it" }
       }//if partial decoy
     }else{
-      println "DO NOT INDEX"
       ch_salmon_index = params.quantSalmon.index
     }// if build index
     quantSalmon(ch_salmon_index, ch_fastq_processed_paired)
     ch_salmon_result = quantSalmon.out
       .view{ "Salmon results: $it" }
+    ch_salmon_names = ch_salmon_result.map{it -> it[0]}.collect().map{ it -> it.join(' ')}
+    ch_salmon_dirs = ch_salmon_result.map{it -> it[1]}.collect()
+    mergeSalmon("salmon_" + params.buildindexSalmon.mode,
+                ch_salmon_names, 
+                ch_salmon_dirs)
+    ch_salmon_merged = mergeSalmon.out
+      .view{ "Salmon results merged: $it" }
 
-  }
-    
-  }
+  } //if Do salmon
 
   emit:
   ch_hisat2_result
@@ -151,4 +165,5 @@ workflow ALIGN {
   ch_stringtie_results
   ch_stringtie_results_merged
   ch_salmon_result
+  ch_salmon_merged
 }

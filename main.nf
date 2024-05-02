@@ -1,5 +1,3 @@
-
-
 include { CLEANFASTQ } from './workflows/cleanfastqwf.nf'
 include { ALIGN } from './workflows/alignwf.nf'
 
