@@ -1,8 +1,6 @@
 include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
-include { alignHISAT2 } from '../modules/hisat2-align'
-include { alignSTAR } from '../modules/star-align'
-include { buildindexSTAR } from '../modules/star-buildindex'
-include { alignSTAR2ndPass } from '../modules/star-align-2ndpass'
+include { ALIGN_WITH_STAR } from './align_with_star_wf'
+
 include { quantStringtie2 } from '../modules/stringtie2-quant'
 include { mergeStringtie2 } from '../modules/stringtie2-merge'
 include { quantSalmon } from '../modules/salmon-quant'
@@ -25,54 +23,25 @@ workflow ALIGN {
     ch_hisat2_bam = ALIGN_WITH_HISAT2.out.ch_hisat2_bam
   } // end HISAT2
 
-   //Align using STAR
+  //Align using STAR
   ch_star_result = Channel.from([])
   ch_star_bam = Channel.from([])
+  ch_star_bam_bytranscript = Channel.from([])
   ch_star_2ndpass_result = Channel.from([])
   ch_star_2ndpass_bam = Channel.from([])
-  ch_star_bam_bytranscript = Channel.from([])
   ch_star_2ndpass_bam_bytranscript = Channel.from([])
-  if(params.alignSTAR.do_star){ 
-    if(params.buildindexSTAR.do_index){
-      
-      buildindexSTAR(params.buildindexSTAR.index_name,
-                    params.buildindexSTAR.fasta,
-                    params.buildindexSTAR.annot)
 
-      ch_star_index = buildindexSTAR.out
-       //.view{ "STAR index created: $it" }
-    }else{
-      ch_star_index = params.alignSTAR.index
-    }
+  if(params.workflows.do_star){ 
+    ALIGN_WITH_STAR(ch_fastq_processed_paired)
+    ch_star_result = ALIGN_WITH_STAR.out.ch_star_result
+    ch_star_bam = ALIGN_WITH_STAR.out.ch_star_bam
+    ch_star_bam_bytranscript = ALIGN_WITH_STAR.out.ch_star_bam_bytranscript
+    ch_star_2ndpass_result = ALIGN_WITH_STAR.out.ch_star_2ndpass_result
+    ch_star_2ndpass_bam = ALIGN_WITH_STAR.out.ch_star_2ndpass_bam
+    ch_star_2ndpass_bam_bytranscript = ALIGN_WITH_STAR.out.ch_star_2ndpass_bam_bytranscript
+  }// end STAR
 
-    alignSTAR(ch_star_index, 
-              ch_fastq_processed_paired)
 
-     ch_star_result = alignSTAR.out
-     //.view{ "STAR full result: $it" }
-     ch_star_bam = ch_star_result.map{it -> tuple("STAR", it[0], it[1], it[2])}
-     //.view{ "STAR BAM only: $it" }
-     ch_star_bam_bytranscript = ch_star_result.map{it -> tuple("STARt", it[0], it[3], it[4])}
-     //.view{ "STAR BAM only by transcript: $it" }
-
-    if(params.alignSTAR2ndPass.do_star){
-    ch_star2ndpass_input_SJ = ch_star_result
-        .map{it -> tuple(it[5])}
-        .collect()
-       //.view{ "STAR splice junctions collect: $it" }
-
-    alignSTAR2ndPass(ch_star_index, 
-                    ch_fastq_processed_paired, 
-                    ch_star2ndpass_input_SJ)
-
-    ch_star_2ndpass_result = alignSTAR2ndPass.out
-    //.view{ "STAR 2nd PASS full result: $it" }
-     ch_star_2ndpass_bam = ch_star_2ndpass_result.map{it -> tuple("STAR2", it[0], it[1], it[2])}
-    .view{ "STAR 2nd PASS BAM only: $it" }
-    ch_star_2ndpass_bam_bytranscript = ch_star_2ndpass_result.map{it -> tuple("STARt2", it[0], it[3], it[4])}
-    .view{ "STAR 2nd PASS BAM only by transcript: $it" }
-    }// end STAR 2nd pass
-  }
   // Merge alignments
   ch_alignment_all = ch_hisat2_bam
     .concat(ch_star_bam)
@@ -145,7 +114,7 @@ workflow ALIGN {
   ch_salmon_aln_result = Channel.from([])
   ch_salmon_aln_names = Channel.from([])
   ch_salmon_aln_dirs = Channel.from([])
-  if(params.alignSTAR.do_star && params.quantBamSalmon.do_salmon){
+  if(params.workflows.do_star && params.quantBamSalmon.do_salmon){
       ch_alignment_all_bytrans = ch_star_bam_bytranscript  //Concat STAR results from 1st and 2nd pass
             .concat(ch_star_2ndpass_bam_bytranscript)
       quantBamSalmon(ch_alignment_all_bytrans)  //Quantify with Salmon in alignment mode
