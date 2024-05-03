@@ -1,4 +1,4 @@
-include { buildindexHISAT2 } from '../modules/hisat2-buildindex'
+include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
 include { alignHISAT2 } from '../modules/hisat2-align'
 include { alignSTAR } from '../modules/star-align'
 include { buildindexSTAR } from '../modules/star-buildindex'
@@ -14,28 +14,15 @@ include { buildindexSalmon } from '../modules/salmon-buildindex'
 workflow ALIGN {
   take: ch_fastq_processed_paired
   main:
+
   //Align using HISAT2
   ch_hisat2_result = Channel.from([])
   ch_hisat2_bam = Channel.from([])
 
-  if(params.alignHISAT2.do_hisat2){ 
-    if(params.buildindexHISAT2.do_index){
-      buildindexHISAT2(
-        params.buildindexHISAT2.index_dir,
-        params.buildindexHISAT2.index_name,
-        params.buildindexHISAT2.fasta,
-        params.buildindexHISAT2.annot)
-      ch_hisat2_index = buildindexHISAT2.out
-        .map{it -> it[0]}
-        //.view{ "HISAT2 index created: $it" }
-    }else{
-      ch_hisat2_index = params.alignHISAT2.index
-    }
-    alignHISAT2(ch_hisat2_index, ch_fastq_processed_paired)
-    ch_hisat2_result = alignHISAT2.out
-     //.view{ "HISAT2 full result: $it" }
-    ch_hisat2_bam = ch_hisat2_result.map{it -> tuple("HISAT2", it[0], it[1], it[2])}
-      //.view{ "HISAT2 BAM only: $it" }
+  if(params.workflows.do_hisat2){ 
+    ALIGN_WITH_HISAT2(ch_fastq_processed_paired)
+    ch_hisat2_result = ALIGN_WITH_HISAT2.out.ch_hisat2_result
+    ch_hisat2_bam = ALIGN_WITH_HISAT2.out.ch_hisat2_bam
   } // end HISAT2
 
    //Align using STAR
