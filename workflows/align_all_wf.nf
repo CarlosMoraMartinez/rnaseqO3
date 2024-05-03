@@ -3,7 +3,7 @@ include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 include { QUANTIFY_WITH_SALMON } from './quantify_with_salmon_wf'
 
-workflow ALIGN {
+workflow ALIGN_ALL {
   take: ch_fastq_processed_paired
   main:
 

@@ -1,5 +1,5 @@
-include { CLEANFASTQ } from './workflows/cleanfastqwf.nf'
-include { ALIGN } from './workflows/alignwf.nf'
+include { CLEANFASTQ } from './workflows/cleanfastq_wf.nf'
+include { ALIGN_ALL } from './workflows/align_all_wf.nf'
 
 workflow {
 
@@ -7,64 +7,37 @@ workflow {
    ch_rawfastq = Channel.fromFilePairs(params.raw_fastq)
      .view{"FilePairs input: $it"}
 
-    if(params.workflows.doCleanFastq){
-   //Call clean fastq workflow
+   if(params.workflows.doCleanFastq){
+      //Call clean fastq workflow
       CLEANFASTQ(ch_rawfastq)
 
-   //Get outputs (not all of them are used)
+      //Get outputs (not all of them are used)
       ch_fastq_processed  = CLEANFASTQ.out.ch_fastq_processed
       ch_fastq_processed_paired = CLEANFASTQ.out.ch_fastq_processed_paired
       ch_fastqc = CLEANFASTQ.out.ch_fastqc
-    }else{
-      print "Skipping CLEANFASTQ. Taking raw fastq as final fastq."
+   }else{
+      println "Skipping CLEANFASTQ. Taking raw fastq as final fastq."
       ch_fastq_processed_paired = ch_rawfastq
       ch_fastq_processed  = Channel.from([])
       ch_fastqc = Channel.from([])
-    }
+   }
 
-   ALIGN(ch_fastq_processed_paired)
+   // Workflow to perform alignment and quantification with all programs (depending on config)
+   ALIGN_ALL(ch_fastq_processed_paired)
 
-   ////Call kraken workflow
-   //if(params.workflows.doKraken2Bracken){
-   //   KRAKEN2BRACKEN(ch_fastq_filtered)
-   //   //Get outputs (not all of them are used)
-   //   ch_kraken2_output = KRAKEN2BRACKEN.out.ch_kraken2_output
-   //   ch_bracken_output = KRAKEN2BRACKEN.out.ch_bracken_output
-   //   ch_transform2mpa_output = KRAKEN2BRACKEN.out.ch_transform2mpa_output
-   //   ch_combineMpa_output = KRAKEN2BRACKEN.out.ch_combineMpa_output
-   //   ch_krona_output = KRAKEN2BRACKEN.out.ch_krona_output
-   //}else{
-   //   print "Skipping KRAKEN2BRACKEN."
-   //   ch_kraken2_output = Channel.from([])
-   //   ch_bracken_output = Channel.from([])
-   //   ch_transform2mpa_output = Channel.from([])
-   //   ch_combineMpa_output = Channel.from([])
-   //   ch_krona_output = Channel.from([])
-   //}
-//
-  ////Call Humann3 workflow
-   //if(params.workflows.doHumann3){
-   //   HUMANN3(ch_fastq_filtered)
-   //   ch_metaphlan = HUMANN3.out.ch_metaphlan
-   //   ch_metaphlan_merged = HUMANN3.out.ch_metaphlan
-   //   ch_humann3 = HUMANN3.out.ch_humann3
-   //}else{
-   //   ch_metaphlan = Channel.from([])
-   //   ch_metaphlan_merged = Channel.from([])
-   //   ch_humann3 = Channel.from([])
-   //}
-//
-   ////Call Assembly workflow
-   //if(params.workflows.doAssembly){
-   //   ASSEMBLY(ch_fastq_filtered)
-   //   ch_spades_output = ASSEMBLY.out.ch_spades_output
-   //   ch_megahit_output = ASSEMBLY.out.ch_megahit_output
-   //   ch_metaquast_output = ASSEMBLY.out.ch_metaquast_output
-   //}else{
-   //   ch_spades_output = Channel.from([])
-   //   ch_megahit_output = Channel.from([])
-   //   ch_metaquast_output = Channel.from([])
-   //}
+   ch_hisat2_result = ALIGN_ALL.out.ch_hisat2_result
+   ch_hisat2_bam  = ALIGN_ALL.out.ch_hisat2_bam
+   ch_star_result = ALIGN_ALL.out.ch_star_result
+   ch_star_bam = ALIGN_ALL.out.ch_star_bam
+   ch_star_2ndpass_result = ALIGN_ALL.out.ch_star_2ndpass_result
+   ch_star_2ndpass_bam = ALIGN_ALL.out.ch_star_2ndpass_bam
+   ch_stringtie_results = ALIGN_ALL.out.ch_stringtie_results
+   ch_stringtie_results_merged  = ALIGN_ALL.out.ch_stringtie_results_merged
+   ch_salmon_result = ALIGN_ALL.out.ch_salmon_result
+   ch_salmon_aln_result = ALIGN_ALL.out.ch_salmon_aln_result
+   ch_salmon_merged = ALIGN_ALL.out.ch_salmon_merged
+
+
    ////Call MultiQC workflow
 //
    //if(params.workflows.doMultiQC){
