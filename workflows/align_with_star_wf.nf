@@ -39,9 +39,9 @@ workflow ALIGN_WITH_STAR {
         ch_star_2ndpass_result = alignSTAR2ndPass.out
             //.view{ "STAR 2nd PASS full result: $it" }
         ch_star_2ndpass_bam = ch_star_2ndpass_result.map{it -> tuple("STAR2", it[0], it[1], it[2])}
-            .view{ "STAR 2nd PASS BAM only: $it" }
+            //.view{ "STAR 2nd PASS BAM only: $it" }
         ch_star_2ndpass_bam_bytranscript = ch_star_2ndpass_result.map{it -> tuple("STARt2", it[0], it[3], it[4])}
-            .view{ "STAR 2nd PASS BAM only by transcript: $it" }
+            //.view{ "STAR 2nd PASS BAM only by transcript: $it" }
     } else{
         ch_star_2ndpass_result = Channel.from([])
         ch_star_2ndpass_bam = Channel.from([])
