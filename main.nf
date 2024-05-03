@@ -31,11 +31,15 @@ workflow {
    ch_star_bam = ALIGN_ALL.out.ch_star_bam
    ch_star_2ndpass_result = ALIGN_ALL.out.ch_star_2ndpass_result
    ch_star_2ndpass_bam = ALIGN_ALL.out.ch_star_2ndpass_bam
+   ch_subread_result = ALIGN_ALL.out.ch_subread_result
+   ch_subread_bam  = ALIGN_ALL.out.ch_subread_bam
    ch_stringtie_results = ALIGN_ALL.out.ch_stringtie_results
    ch_stringtie_results_merged  = ALIGN_ALL.out.ch_stringtie_results_merged
    ch_salmon_result = ALIGN_ALL.out.ch_salmon_result
    ch_salmon_aln_result = ALIGN_ALL.out.ch_salmon_aln_result
    ch_salmon_merged = ALIGN_ALL.out.ch_salmon_merged
+   ch_kallisto_result = ALIGN_ALL.out.ch_kallisto_result
+   ch_fcounts_results = ALIGN_ALL.out.ch_fcounts_results
 
 
    ////Call MultiQC workflow

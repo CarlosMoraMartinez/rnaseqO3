@@ -1,4 +1,5 @@
 include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
+include { ALIGN_WITH_SUBREAD } from './align_with_subread_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 include { QUANTIFY_WITH_FEATURECOUNTS } from './quantify_with_featureCounts_wf'
@@ -18,6 +19,16 @@ workflow ALIGN_ALL {
     ch_hisat2_result = ALIGN_WITH_HISAT2.out.ch_hisat2_result
     ch_hisat2_bam = ALIGN_WITH_HISAT2.out.ch_hisat2_bam
   } // end HISAT2
+
+   //Align using Subread
+  ch_subread_result = Channel.from([])
+  ch_subread_bam = Channel.from([])
+
+  if(params.workflows.do_subread){ 
+    ALIGN_WITH_SUBREAD(ch_fastq_processed_paired)
+    ch_subread_result = ALIGN_WITH_SUBREAD.out.ch_subread_result
+    ch_subread_bam = ALIGN_WITH_SUBREAD.out.ch_subread_bam
+  } // end Subread
 
   //Align using STAR
   ch_star_result = Channel.from([])
@@ -99,6 +110,8 @@ workflow ALIGN_ALL {
   ch_star_bam
   ch_star_2ndpass_result
   ch_star_2ndpass_bam
+  ch_subread_result
+  ch_subread_bam
   ch_stringtie_results
   ch_stringtie_results_merged
   ch_salmon_result
