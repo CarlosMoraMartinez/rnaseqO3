@@ -2,6 +2,7 @@ include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 include { QUANTIFY_WITH_SALMON } from './quantify_with_salmon_wf'
+include { QUANTIFY_WITH_KALLISTO } from './quantify_with_kallisto_wf'
 
 workflow ALIGN_ALL {
   take: ch_fastq_processed_paired
@@ -70,6 +71,13 @@ workflow ALIGN_ALL {
     ch_salmon_merged = QUANTIFY_WITH_SALMON.out.ch_salmon_merged
   } // end SALMON
 
+  // Quantify with Kallisto
+  if(params.workflows.do_kallisto){
+    QUANTIFY_WITH_KALLISTO(ch_fastq_processed_paired)
+    
+    ch_kallisto_result = QUANTIFY_WITH_KALLISTO.out.ch_kallisto_result
+  }
+
   emit:
   ch_hisat2_result
   ch_hisat2_bam
@@ -82,4 +90,5 @@ workflow ALIGN_ALL {
   ch_salmon_result
   ch_salmon_aln_result
   ch_salmon_merged
+  ch_kallisto_result
 }

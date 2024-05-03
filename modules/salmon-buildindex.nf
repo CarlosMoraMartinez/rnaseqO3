@@ -23,7 +23,9 @@ process buildindexSalmon{
   '''
   outdir=!{index_dir}'_'!{mode}
 
-  salmon index -t !{transcripts_fasta} -i $outdir -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
+  salmon index --threads !{params.resources.buildindexSalmon.cpus} \
+    -t !{transcripts_fasta} -i $outdir \
+    -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
   '''
 
   else if(mode == "genome_decoy")
@@ -33,7 +35,9 @@ process buildindexSalmon{
   cat !{transcripts_fasta} !{genome_fasta} > transcripts_genomedecoy.fasta
   grep ">" !{genome_fasta} | sed "s/>//" | cut -f1 -d' ' > decoys.txt
 
-  salmon index -t transcripts_genomedecoy.fasta -i $outdir --decoys decoys.txt -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
+  salmon index --threads !{params.resources.buildindexSalmon.cpus} \
+    -t transcripts_genomedecoy.fasta -i $outdir --decoys decoys.txt \
+    -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
 
   rm transcripts_genomedecoy.fasta
  
@@ -43,6 +47,9 @@ process buildindexSalmon{
   '''
   outdir=!{index_dir}'_'!{mode}
 
-  salmon index -t !{transcripts_fasta} -i $outdir --decoys !{decoy} -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
+  salmon index --threads !{params.resources.buildindexSalmon.cpus} \
+    -t !{transcripts_fasta} -i $outdir \
+    --decoys !{decoy} \
+    -k !{params.buildindexSalmon.k} !{params.buildindexSalmon.options}
   '''
 }
