@@ -1,8 +1,7 @@
 include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
+include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 
-include { quantStringtie2 } from '../modules/stringtie2-quant'
-include { mergeStringtie2 } from '../modules/stringtie2-merge'
 include { quantSalmon } from '../modules/salmon-quant'
 include { quantBamSalmon } from '../modules/salmon-quant-frombam'
 include { mergeSalmon } from '../modules/salmon-merge'
@@ -41,28 +40,15 @@ workflow ALIGN {
     ch_star_2ndpass_bam_bytranscript = ALIGN_WITH_STAR.out.ch_star_2ndpass_bam_bytranscript
   }// end STAR
 
-
-  // Merge alignments
-  ch_alignment_all = ch_hisat2_bam
-    .concat(ch_star_bam)
-    .concat(ch_star_2ndpass_bam)
-    //.view{ "All alignments concat: $it" }
-
+  // Quantify using STRINGTIE
+  ch_stringtie_results_merged = Channel.from([])
   ch_stringtie_results = Channel.from([])
-  if(params.quantStringtie2.do_stringtie){
-    quantStringtie2(ch_alignment_all)
-    ch_stringtie_results = quantStringtie2.out
-    //.view{ "Stringtie results: $it" }
-    ch_stringtie_results_grouped = ch_stringtie_results
-    .map{it -> tuple(it[0], tuple(it[2]))}
-    .groupTuple(by: 0)
-    .map{it -> tuple(it[0], it[1].flatten())}
-    //.view{ "Stringtie results grouped: $it" }
+  if(params.workflows.do_stringtie){
+    QUANTIFY_WITH_STRINGTIE(ch_hisat2_bam, ch_star_bam, ch_star_2ndpass_bam)
+    ch_stringtie_results_merged = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results_merged
+    ch_stringtie_results = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results
+  } // end STRINGTIE
 
-    mergeStringtie2(ch_stringtie_results_grouped)
-    ch_stringtie_results_merged = mergeStringtie2.out
-      //.view{ "Stringtie merge prepDE.py results: $it" }
-  }
   ch_salmon_result = Channel.from([])
   if(params.quantSalmon.do_salmon){
     if(params.buildindexSalmon.do_index){
