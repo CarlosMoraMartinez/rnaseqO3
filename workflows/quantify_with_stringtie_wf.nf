@@ -6,6 +6,7 @@ workflow QUANTIFY_WITH_STRINGTIE {
   ch_hisat2_bam
   ch_star_bam
   ch_star_2ndpass_bam
+  ch_subread_bam
 
   main:
 
@@ -13,7 +14,8 @@ workflow QUANTIFY_WITH_STRINGTIE {
   ch_alignment_all = ch_hisat2_bam
     .concat(ch_star_bam)
     .concat(ch_star_2ndpass_bam)
-    //.view{ "All alignments concat: $it" }
+    .concat(ch_subread_bam)
+    .view{ "All alignments concat: $it" }
 
   // Call Stringtie2
   quantStringtie2(ch_alignment_all)

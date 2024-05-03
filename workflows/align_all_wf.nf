@@ -58,7 +58,8 @@ workflow ALIGN_ALL {
     QUANTIFY_WITH_STRINGTIE(
       ch_hisat2_bam, 
       ch_star_bam, 
-      ch_star_2ndpass_bam
+      ch_star_2ndpass_bam,
+      ch_subread_bam
     )
 
     ch_stringtie_results_merged = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results_merged
@@ -72,7 +73,8 @@ workflow ALIGN_ALL {
     QUANTIFY_WITH_FEATURECOUNTS(
       ch_hisat2_bam, 
       ch_star_bam, 
-      ch_star_2ndpass_bam
+      ch_star_2ndpass_bam,
+      ch_subread_bam
     )
 
     ch_fcounts_results = QUANTIFY_WITH_FEATURECOUNTS.out.ch_fcounts_results
