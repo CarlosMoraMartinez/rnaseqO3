@@ -12,7 +12,7 @@ process quantBamSalmon{
   tuple(val(flag), val(sample_id), path(bam), path(bai))
   
   output:
-  tuple(val(flag), val(sample_id), path('*_salmonaln'))
+  tuple(val("saln-${flag}"), val(sample_id), path('*_salmonaln'))
 
   shell:
   '''

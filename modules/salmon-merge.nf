@@ -9,11 +9,8 @@ process mergeSalmon{
   maxRetries 10
   publishDir "$results_dir/mg03_salmon_merge", mode: 'symlink'
   input:
-  val(tag)
-  val(sample_names)
-  path(salmon_dirs)
-
-  
+  tuple(val(tag), val(sample_names), path(salmon_dirs))
+ 
   output:
   tuple(path('*_numreads.tsv'), path('*_tpm.tsv'))
 

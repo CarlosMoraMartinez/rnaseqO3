@@ -43,7 +43,8 @@ workflow ALIGN {
   ch_star_bam = Channel.from([])
   ch_star_2ndpass_result = Channel.from([])
   ch_star_2ndpass_bam = Channel.from([])
-
+  ch_star_bam_bytranscript = Channel.from([])
+  ch_star_2ndpass_bam_bytranscript = Channel.from([])
   if(params.alignSTAR.do_star){ 
     if(params.buildindexSTAR.do_index){
       
@@ -63,9 +64,9 @@ workflow ALIGN {
      ch_star_result = alignSTAR.out
      //.view{ "STAR full result: $it" }
      ch_star_bam = ch_star_result.map{it -> tuple("STAR", it[0], it[1], it[2])}
-     .view{ "STAR BAM only: $it" }
+     //.view{ "STAR BAM only: $it" }
      ch_star_bam_bytranscript = ch_star_result.map{it -> tuple("STARt", it[0], it[3], it[4])}
-     .view{ "STAR BAM only by transcript: $it" }
+     //.view{ "STAR BAM only by transcript: $it" }
 
     if(params.alignSTAR2ndPass.do_star){
     ch_star2ndpass_input_SJ = ch_star_result
@@ -106,7 +107,7 @@ workflow ALIGN {
     ch_stringtie_results_merged = mergeStringtie2.out
       //.view{ "Stringtie merge prepDE.py results: $it" }
   }
-  
+  ch_salmon_result = Channel.from([])
   if(params.quantSalmon.do_salmon){
     if(params.buildindexSalmon.do_index){
       if(params.buildindexSalmon.mode == "partial_decoy"){
@@ -117,11 +118,11 @@ workflow ALIGN {
           params.mapdecoySalmontools.annot
         )
         ch_salmon_partialdecoy = mapdecoySalmontools.out
-          .view{ "Salmon partial decoy created: $it" }
+          //.view{ "Salmon partial decoy created: $it" }
         ch_partial_decoy_fasta = ch_salmon_partialdecoy.map{it -> it[0]}
-          .view{ "Salmon partial decoy FASTA: $it" }
+          //.view{ "Salmon partial decoy FASTA: $it" }
         ch_partial_decoy_txt = ch_salmon_partialdecoy.map{it -> it[1]}
-          .view{ "Salmon partial decoy txt: $it" }
+          //.view{ "Salmon partial decoy txt: $it" }
 
         buildindexSalmon(
           params.buildindexSalmon.name,
@@ -131,7 +132,7 @@ workflow ALIGN {
           ch_partial_decoy_txt
         )
         ch_salmon_index = buildindexSalmon.out
-         .view{ "Salmon index created with partial decoy: $it" }
+         //.view{ "Salmon index created with partial decoy: $it" }
 
       }else{
         buildindexSalmon(
@@ -142,22 +143,14 @@ workflow ALIGN {
           params.buildindexSalmon.annot //Not used for anything, decoy when mode=partial_decoy
         )
         ch_salmon_index = buildindexSalmon.out
-         .view{ "Salmon index created: $it" }
+         //.view{ "Salmon index created: $it" }
       }//if partial decoy
     }else{
       ch_salmon_index = params.quantSalmon.index
     }// if build index
     quantSalmon(ch_salmon_index, ch_fastq_processed_paired)
     ch_salmon_result = quantSalmon.out
-      .view{ "Salmon results: $it" }
-    ch_salmon_names = ch_salmon_result.map{it -> it[0]}.collect().map{ it -> it.join(' ')}
-    ch_salmon_dirs = ch_salmon_result.map{it -> it[1]}.collect()
-    mergeSalmon("salmon_" + params.buildindexSalmon.mode,
-                ch_salmon_names, 
-                ch_salmon_dirs)
-    ch_salmon_merged = mergeSalmon.out
-      .view{ "Salmon results merged: $it" }
-
+      //.view{ "Salmon results: $it" }
   } //if Do salmon
 
   //Salmon quantify from bam
@@ -165,25 +158,39 @@ workflow ALIGN {
   ch_salmon_aln_result = Channel.from([])
   ch_salmon_aln_names = Channel.from([])
   ch_salmon_aln_dirs = Channel.from([])
-  if(params.quantBamSalmon.do_salmon){
-      ch_alignment_all_bytrans = ch_star_bam_bytranscript
-      .concat(ch_star_2ndpass_bam_bytranscript)
-      quantBamSalmon(ch_alignment_all_bytrans)
+  if(params.alignSTAR.do_star && params.quantBamSalmon.do_salmon){
+      ch_alignment_all_bytrans = ch_star_bam_bytranscript  //Concat STAR results from 1st and 2nd pass
+            .concat(ch_star_2ndpass_bam_bytranscript)
+      quantBamSalmon(ch_alignment_all_bytrans)  //Quantify with Salmon in alignment mode
       ch_salmon_aln_result = quantBamSalmon.out
-      .view{ "Salmon from Alignment results: $it" }
-      //ch_salmon_aln_names = ch_salmon_aln_result.map{it -> it[0]}.collect().map{ it -> it.join(' ')}
-      //ch_salmon_aln_dirs = ch_salmon_aln_result.map{it -> it[1]}.collect()
-      //.view{ "Salmon from Alignment results only dir: $it" }
+      //.view{ "Salmon from Alignment results: $it" }
   }// Salmon quant from SAM file 
 
-  if(params.quantBamSalmon.do_salmon || params.quantSalmon.do_salmon){
-      ch_salmon_aln_results_grouped = ch_salmon_result.map{it -> tuple("salmon", it[0], it[1])}
+  //Merge all salmon results (salmon mapping mode + salmon alignment mode from STAR 1st and 2nd passes)
+  ch_salmon_merged = Channel.from([])
+  if((params.quantBamSalmon.do_salmon && params.alignSTAR.do_star) || params.quantSalmon.do_salmon){
+      ch_salmon_aln_results_grouped = ch_salmon_result.map{it -> tuple("salmon-"+ params.buildindexSalmon.mode, it[0], it[1])}
         .concat(ch_salmon_aln_result)
-        .view{ "Salmon ALN concat: $it" }
-        .map{it -> tuple(it[0], tuple(it[2]))}
-        .groupTuple(by: 0)
-        .map{it -> tuple(it[0], it[1].flatten())}
-        .view{ "Salmon ALN results grouped: $it" }
+        //.view{ "Salmon ALN concat: $it" }
+        .multiMap{it ->
+                      samplenames: tuple(it[0], tuple(it[1]))
+                      salmonresults: tuple(it[0], tuple(it[2]))                 
+                      }
+        ch_salmon_aln_results_grouped.samplenames.groupTuple(by: 0).map{it2 -> tuple(it2[0], it2[1].flatten().join(' '))}
+            .view{ "Salmon ALN names SEP: $it" }
+            .set{salmon_grouped_samplenames}
+
+        ch_salmon_aln_results_grouped.salmonresults.groupTuple(by: 0).map{it3 -> tuple(it3[0], it3[1].flatten())}
+            .view{ "Salmon ALN results SEP: $it" }
+            .set{salmon_grouped_resultdirs}
+            
+        ch_salmon_aln_results_grouped2 = salmon_grouped_samplenames
+            .combine(salmon_grouped_resultdirs, by: 0)
+            .view{ "Salmon ALN results MERGED: $it" }
+
+        mergeSalmon(ch_salmon_aln_results_grouped2)
+        ch_salmon_merged = mergeSalmon.out
+        .view{ "Salmon results merged: $it" }
   }
 
   emit:
