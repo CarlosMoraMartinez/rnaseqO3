@@ -42,6 +42,7 @@ process alignSTAR{
   sortedbamtranscr=!{sample_id}_Aligned.toTranscriptome.sorted.bam
   samtools sort !{sample_id}_Aligned.toTranscriptome.out.bam -O bam -o $sortedbamtranscr
   samtools index $sortedbamtranscr
+  rm !{sample_id}_Aligned.toTranscriptome.out.bam
 
   flagstat=!{sample_id}.star.flagstat
   samtools flagstat !{sample_id}_Aligned.sortedByCoord.out.bam > $flagstat

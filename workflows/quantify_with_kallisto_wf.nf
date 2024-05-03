@@ -12,13 +12,13 @@ workflow QUANTIFY_WITH_KALLISTO {
       params.buildindexKallisto.transcripts_fasta
       )
     ch_kallisto_index = buildindexKallisto.out
-      .view{ "KALLISTO index created: $it" }
+      //.view{ "KALLISTO index created: $it" }
   }else{
     ch_kallisto_index = params.quantKallisto.index
   }
   quantKallisto(ch_kallisto_index, ch_fastq_processed_paired)
   ch_kallisto_result = quantKallisto.out
-    .view{ "KALLISTO full result: $it" }
+    //.view{ "KALLISTO full result: $it" }
 
   emit:
   ch_kallisto_result

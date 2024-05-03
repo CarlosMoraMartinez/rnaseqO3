@@ -1,13 +1,5 @@
-include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
-include { ALIGN_WITH_STAR } from './align_with_star_wf'
-
 include { quantStringtie2 } from '../modules/stringtie2-quant'
 include { mergeStringtie2 } from '../modules/stringtie2-merge'
-include { quantSalmon } from '../modules/salmon-quant'
-include { quantBamSalmon } from '../modules/salmon-quant-frombam'
-include { mergeSalmon } from '../modules/salmon-merge'
-include { mapdecoySalmontools } from '../modules/salmontools-mapdecoy'
-include { buildindexSalmon } from '../modules/salmon-buildindex'
 
 workflow QUANTIFY_WITH_STRINGTIE {
   take: 

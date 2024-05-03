@@ -44,6 +44,7 @@ process alignSTAR2ndPass{
   sortedbamtranscr=!{sample_id}_p2_Aligned.toTranscriptome.sorted.bam
   samtools sort !{sample_id}_p2_Aligned.toTranscriptome.out.bam -O bam -o $sortedbamtranscr
   samtools index $sortedbamtranscr
+  rm !{sample_id}_p2_Aligned.toTranscriptome.out.bam
 
   flagstat=!{sample_id}.starp2.flagstat
   samtools flagstat !{sample_id}_p2_Aligned.sortedByCoord.out.bam > $flagstat

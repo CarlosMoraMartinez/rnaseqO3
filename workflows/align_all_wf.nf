@@ -1,6 +1,7 @@
 include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
+include { QUANTIFY_WITH_FEATURECOUNTS } from './quantify_with_featureCounts_wf'
 include { QUANTIFY_WITH_SALMON } from './quantify_with_salmon_wf'
 include { QUANTIFY_WITH_KALLISTO } from './quantify_with_kallisto_wf'
 
@@ -53,6 +54,19 @@ workflow ALIGN_ALL {
     ch_stringtie_results = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results
   } // end STRINGTIE
 
+  // Quantify using featureCounts
+  ch_fcounts_results = Channel.from([])
+  if(params.workflows.do_featureCounts){
+
+    QUANTIFY_WITH_FEATURECOUNTS(
+      ch_hisat2_bam, 
+      ch_star_bam, 
+      ch_star_2ndpass_bam
+    )
+
+    ch_fcounts_results = QUANTIFY_WITH_FEATURECOUNTS.out.ch_fcounts_results
+  } // end featureCounts
+
   // Quantify using   SALMON
   ch_salmon_result = Channel.from([])
   ch_salmon_aln_result = Channel.from([])
@@ -91,4 +105,5 @@ workflow ALIGN_ALL {
   ch_salmon_aln_result
   ch_salmon_merged
   ch_kallisto_result
+  ch_fcounts_results
 }
