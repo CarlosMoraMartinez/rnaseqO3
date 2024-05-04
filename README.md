@@ -3,7 +3,7 @@
 
 This pipeline combines some of the most commond RNA-seq analysis tools. Currently, only one trimming tool can be used, but all aligners and quantifiers are combined (i.e., if using 2 aligners and 2 quantifiers, you will end up with 4 count matrices). 
 
-Currently, the following trimming tools are available:
+Currently, the following trimming tools are included:
 
 - Trimmomatic
 - BBDuk
