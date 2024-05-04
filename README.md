@@ -1,4 +1,5 @@
-# RNA-seqO3: an RNA-seq pipeline to quantify expression from short reads
+# RNA-seqO3
+## An RNA-seq pipeline to quantify expression from short reads
 
 This pipeline combines some of the most commond RNA-seq analysis tools. Currently, only one trimming tool can be used, but all aligners and quantifiers are combined (i.e., if using 2 aligners and 2 quantifiers, you will end up with 4 count matrices). 
 
@@ -29,7 +30,7 @@ The following software combinations are available:
 
 All tools can be configured by changing the config file. There is support to build the three index types in salmon (from transcriptome without decoy, with full decoy and with partial decoy, by calling the [generateDecoyTranscriptome.sh](https://github.com/COMBINE-lab/SalmonTools/blob/master/scripts/generateDecoyTranscriptome.sh) script internally). HTSeq can be run with combinations of different options in the same run.  
 
-# Running the pipeline:
+# Running the pipeline
 
 The pipeline is prepared to run locally or in a Slurm cluster. You can switch between configurations by using different config files (in the **/config** directory)
 
