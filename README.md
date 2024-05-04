@@ -24,7 +24,6 @@ The following software combinations are available:
 - subread + Stringtie2
 - subread + featureCounts
 - subread + HTSeq
-- subread + Salmon in alignment mode
 - Kallisto
 - Salmon
 
