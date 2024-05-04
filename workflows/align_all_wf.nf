@@ -1,5 +1,6 @@
 include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
 include { ALIGN_WITH_SUBREAD } from './align_with_subread_wf'
+include { ALIGN_WITH_BBMAP } from './align_with_bbmap_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 include { QUANTIFY_WITH_FEATURECOUNTS } from './quantify_with_featureCounts_wf'
@@ -31,6 +32,17 @@ workflow ALIGN_ALL {
     ch_subread_bam = ALIGN_WITH_SUBREAD.out.ch_subread_bam
   } // end Subread
 
+  //Align using BBMap
+  ch_bbmap_result = Channel.from([])
+  ch_bbmap_bam = Channel.from([])
+
+  if(params.workflows.do_bbmap){ 
+    ALIGN_WITH_BBMAP(ch_fastq_processed_paired)
+    ch_bbmap_result = ALIGN_WITH_BBMAP.out.ch_bbmap_result
+    ch_bbmap_bam = ALIGN_WITH_BBMAP.out.ch_bbmap_bam
+  } // end BBMap
+
+
   //Align using STAR
   ch_star_result = Channel.from([])
   ch_star_bam = Channel.from([])
@@ -60,7 +72,9 @@ workflow ALIGN_ALL {
       ch_hisat2_bam, 
       ch_star_bam, 
       ch_star_2ndpass_bam,
-      ch_subread_bam
+      ch_subread_bam,
+      ch_bbmap_bam
+      
     )
 
     ch_stringtie_results_merged = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results_merged
@@ -75,7 +89,8 @@ workflow ALIGN_ALL {
       ch_hisat2_bam, 
       ch_star_bam, 
       ch_star_2ndpass_bam,
-      ch_subread_bam
+      ch_subread_bam,
+      ch_bbmap_bam
     )
 
     ch_fcounts_results = QUANTIFY_WITH_FEATURECOUNTS.out.ch_fcounts_results
@@ -89,7 +104,8 @@ workflow ALIGN_ALL {
       ch_hisat2_bam, 
       ch_star_bam, 
       ch_star_2ndpass_bam,
-      ch_subread_bam
+      ch_subread_bam,
+      ch_bbmap_bam
     )
 
     ch_htseq_results = QUANTIFY_WITH_HTSEQ.out.ch_htseq_results

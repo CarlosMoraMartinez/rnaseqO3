@@ -24,6 +24,9 @@ The following software combinations are available:
 - subread + Stringtie2
 - subread + featureCounts
 - subread + HTSeq
+- BBMap + Stringtie2
+- BBMap + featureCounts
+- BBMap + HTSeq
 - Kallisto
 - Salmon
 

@@ -6,6 +6,7 @@ workflow QUANTIFY_WITH_HTSEQ {
   ch_star_bam
   ch_star_2ndpass_bam
   ch_subread_bam
+  ch_bbmap_bam
 
   main:
 
@@ -14,6 +15,7 @@ workflow QUANTIFY_WITH_HTSEQ {
     .concat(ch_subread_bam)
     .concat(ch_star_bam)
     .concat(ch_star_2ndpass_bam)
+    .concat(ch_bbmap_bam)
     //.view{ "All alignments concat: $it" }
   
   ch_alignment_all_grouped = ch_alignment_all

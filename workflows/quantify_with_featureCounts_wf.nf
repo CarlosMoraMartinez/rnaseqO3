@@ -6,12 +6,14 @@ workflow QUANTIFY_WITH_FEATURECOUNTS {
   ch_star_bam
   ch_star_2ndpass_bam
   ch_subread_bam
+  ch_bbmap_bam
 
   main:
 
   //First concatenate all alignment channels
   ch_alignment_all = ch_hisat2_bam
     .concat(ch_subread_bam)
+    .concat(ch_bbmap_bam)
     //.concat(ch_star_bam)
     //.concat(ch_star_2ndpass_bam)
     //.view{ "All alignments concat: $it" }
