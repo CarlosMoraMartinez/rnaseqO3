@@ -3,6 +3,7 @@ include { ALIGN_WITH_SUBREAD } from './align_with_subread_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 include { QUANTIFY_WITH_FEATURECOUNTS } from './quantify_with_featureCounts_wf'
+include { QUANTIFY_WITH_HTSEQ } from './quantify_with_htseq_wf'
 include { QUANTIFY_WITH_SALMON } from './quantify_with_salmon_wf'
 include { QUANTIFY_WITH_KALLISTO } from './quantify_with_kallisto_wf'
 
@@ -79,6 +80,20 @@ workflow ALIGN_ALL {
 
     ch_fcounts_results = QUANTIFY_WITH_FEATURECOUNTS.out.ch_fcounts_results
   } // end featureCounts
+
+  // Quantify using HTSeq
+  ch_fcounts_results = Channel.from([])
+  if(params.workflows.do_htseq){
+
+    QUANTIFY_WITH_HTSEQ(
+      ch_hisat2_bam, 
+      ch_star_bam, 
+      ch_star_2ndpass_bam,
+      ch_subread_bam
+    )
+
+    ch_htseq_results = QUANTIFY_WITH_HTSEQ.out.ch_htseq_results
+  } // end HTSeq
 
   // Quantify using   SALMON
   ch_salmon_result = Channel.from([])
