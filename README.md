@@ -8,7 +8,7 @@ Currently, the following trimming tools are available:
 - BBDuk
 - Cutadapt
 
-The following pipeline combinations are available:
+The following software combinations are available:
 
 - HISAT2 + Stringtie2
 - HISAT2 + featureCounts
