@@ -97,7 +97,7 @@ workflow ALIGN_ALL {
   } // end featureCounts
 
   // Quantify using HTSeq
-  ch_fcounts_results = Channel.from([])
+  ch_htseq_results = Channel.from([])
   if(params.workflows.do_htseq){
 
     QUANTIFY_WITH_HTSEQ(
@@ -130,6 +130,7 @@ workflow ALIGN_ALL {
   } // end SALMON
 
   // Quantify with Kallisto
+  ch_kallisto_result = Channel.from([])
   if(params.workflows.do_kallisto){
     QUANTIFY_WITH_KALLISTO(ch_fastq_processed_paired)
     
@@ -145,6 +146,8 @@ workflow ALIGN_ALL {
   ch_star_2ndpass_bam
   ch_subread_result
   ch_subread_bam
+  ch_bbmap_result
+  ch_bbmap_bam
   ch_stringtie_results
   ch_stringtie_results_merged
   ch_salmon_result
@@ -152,4 +155,5 @@ workflow ALIGN_ALL {
   ch_salmon_merged
   ch_kallisto_result
   ch_fcounts_results
+  ch_htseq_results
 }
