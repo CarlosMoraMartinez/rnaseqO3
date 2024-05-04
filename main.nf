@@ -32,7 +32,7 @@ workflow {
    ch_star_2ndpass_result = ALIGN_ALL.out.ch_star_2ndpass_result
    ch_star_2ndpass_bam = ALIGN_ALL.out.ch_star_2ndpass_bam
    ch_subread_result = ALIGN_ALL.out.ch_subread_result
-   ch_subread_bamALIGN_ALL.out.ch_subread_bam
+   ch_subread_bam = ALIGN_ALL.out.ch_subread_bam
    ch_bbmap_result = ALIGN_ALL.out.ch_bbmap_result
    ch_bbmap_bam = ALIGN_ALL.out.ch_bbmap_bam
    ch_stringtie_results = ALIGN_ALL.out.ch_stringtie_results
