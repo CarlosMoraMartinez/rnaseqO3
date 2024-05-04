@@ -30,7 +30,7 @@ The following software combinations are available:
 
 All tools can be configured by changing the config file. There is support to build the three index types in salmon (from transcriptome without decoy, with full decoy and with partial decoy, by calling the [generateDecoyTranscriptome.sh](https://github.com/COMBINE-lab/SalmonTools/blob/master/scripts/generateDecoyTranscriptome.sh) script internally). HTSeq can be run with combinations of different options in the same run.  
 
-# Running the pipeline
+## Running the pipeline
 
 The pipeline is prepared to run locally or in a Slurm cluster. You can switch between configurations by using different config files (in the **/config** directory)
 
@@ -38,11 +38,11 @@ The pipeline is prepared to run locally or in a Slurm cluster. You can switch be
 nextflow run main.nf -c config/run_samples_cluster.config -resume -with-timeline timeline.html -with-report report.html -with-dag pipeline_dag.html
 ```
 
-# Dependencies
+## Dependencies
 
 The pipeline uses different Docker containers for each step; some are pre-build and some are built here. All the dockerfiles can be found in the **docker/** directory. The commands to build them are in **docker/build_image.sh**, and the commands to download the rest are in **docker/docker_images.sh**. By changing the configuration file it is easy to use conda instead of Docker.
 
-# Structure of the repository
+## Structure of the repository
 
 Individual processes (e.g., call FastQC, call HISAT2, etc) are in individual files in the **modules/** directory.
 Workflows use a set of related processes (e.g., index transcriptome -> call Salmon). Each workflow is in an individual file in the **workflows/** directory. Some workflows call other workflows.
