@@ -6,6 +6,7 @@ sudo docker pull staphb/seqkit:latest
 sudo docker pull staphb/multiqc:latest
 sudo docker pull staphb/trimmomatic:latest
 sudo docker pull staphb/samtools:latest
+sudo docker pull gcr.io/broad-cga-aarong-gtex/rnaseqc:latest
 
 sudo docker pull pipecraft/cutadapt:0
 sudo docker pull docker pull  

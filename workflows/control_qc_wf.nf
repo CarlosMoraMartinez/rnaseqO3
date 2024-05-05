@@ -2,6 +2,7 @@ include { buildRefflatFromGTF } from '../modules/build_refflat_from_gtf'
 include { buildIntervalListFromBed } from '../modules/picard_intervallist_from_bed'
 include { picardMarkDuplicates } from '../modules/picard_mark_duplicates'
 include { picardRNASeqMetrics } from '../modules/picard_rnaseqmetrics'
+include { rnaSeQC } from '../modules/rnaseqc'
 
 workflow CONTROL_QC{
   take:
@@ -64,7 +65,17 @@ workflow CONTROL_QC{
     //.view{ "Picard RNASeqMetrics result: $it" }
   }
 
+  ch_rnaseqc = Channel.from([])
+  if(params.rnaSeQC.do){
+    rnaSeQC(params.rnaSeQC.annot, ch_alignment_2_qual)
+    ch_rnaseqc = rnaSeQC.out
+    .view{ "MarkDuplicates output: $it" }
+  }
+
+
   emit:
   ch_alignment_markdups
   ch_picard_rnametrics
+  ch_rnaseqc
+
 }
