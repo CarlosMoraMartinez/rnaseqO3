@@ -2,21 +2,9 @@ include { quantHTSeq } from '../modules/htseq-quant'
 
 workflow QUANTIFY_WITH_HTSEQ {
   take: 
-  ch_hisat2_bam
-  ch_star_bam
-  ch_star_2ndpass_bam
-  ch_subread_bam
-  ch_bbmap_bam
+  ch_alignment_all
 
   main:
-
-  //First concatenate all alignment channels
-  ch_alignment_all = ch_hisat2_bam
-    .concat(ch_subread_bam)
-    .concat(ch_star_bam)
-    .concat(ch_star_2ndpass_bam)
-    .concat(ch_bbmap_bam)
-    //.view{ "All alignments concat: $it" }
   
   ch_alignment_all_grouped = ch_alignment_all
     .groupTuple(by: 0)

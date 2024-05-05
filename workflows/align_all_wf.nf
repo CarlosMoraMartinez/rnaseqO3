@@ -63,18 +63,21 @@ workflow ALIGN_ALL {
     ch_star_2ndpass_bam_bytranscript = ALIGN_WITH_STAR.out.ch_star_2ndpass_bam_bytranscript
   }// end STAR
 
+  //First concatenate all alignment channels
+  ch_alignment_all = ch_hisat2_bam
+    .concat(ch_star_bam)
+    .concat(ch_star_2ndpass_bam)
+    .concat(ch_subread_bam)
+    .concat(ch_bbmap_bam)
+    //.view{ "All alignments concat: $it" }
+
   // Quantify using STRINGTIE
   ch_stringtie_results_merged = Channel.from([])
   ch_stringtie_results = Channel.from([])
   if(params.workflows.do_stringtie){
 
     QUANTIFY_WITH_STRINGTIE(
-      ch_hisat2_bam, 
-      ch_star_bam, 
-      ch_star_2ndpass_bam,
-      ch_subread_bam,
-      ch_bbmap_bam
-      
+      ch_alignment_all
     )
 
     ch_stringtie_results_merged = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results_merged
@@ -86,11 +89,7 @@ workflow ALIGN_ALL {
   if(params.workflows.do_featureCounts){
 
     QUANTIFY_WITH_FEATURECOUNTS(
-      ch_hisat2_bam, 
-      ch_star_bam, 
-      ch_star_2ndpass_bam,
-      ch_subread_bam,
-      ch_bbmap_bam
+      ch_alignment_all
     )
 
     ch_fcounts_results = QUANTIFY_WITH_FEATURECOUNTS.out.ch_fcounts_results
@@ -101,11 +100,7 @@ workflow ALIGN_ALL {
   if(params.workflows.do_htseq){
 
     QUANTIFY_WITH_HTSEQ(
-      ch_hisat2_bam, 
-      ch_star_bam, 
-      ch_star_2ndpass_bam,
-      ch_subread_bam,
-      ch_bbmap_bam
+      ch_alignment_all
     )
 
     ch_htseq_results = QUANTIFY_WITH_HTSEQ.out.ch_htseq_results
