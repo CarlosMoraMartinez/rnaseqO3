@@ -35,6 +35,7 @@ workflow {
    ch_subread_bam = ALIGN_ALL.out.ch_subread_bam
    ch_bbmap_result = ALIGN_ALL.out.ch_bbmap_result
    ch_bbmap_bam = ALIGN_ALL.out.ch_bbmap_bam
+   ch_alignment_all = ALIGN_ALL.out.ch_alignment_all
    ch_stringtie_results = ALIGN_ALL.out.ch_stringtie_results
    ch_stringtie_results_merged  = ALIGN_ALL.out.ch_stringtie_results_merged
    ch_salmon_result = ALIGN_ALL.out.ch_salmon_result

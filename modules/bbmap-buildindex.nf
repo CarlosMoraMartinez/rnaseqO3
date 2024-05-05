@@ -12,7 +12,7 @@ process buildindexBBMap{
   path(fasta)
   
   output:
-  tuple(path("ref"))
+  path("ref")
 
   shell:
   '''

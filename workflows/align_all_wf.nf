@@ -143,6 +143,7 @@ workflow ALIGN_ALL {
   ch_subread_bam
   ch_bbmap_result
   ch_bbmap_bam
+  ch_alignment_all
   ch_stringtie_results
   ch_stringtie_results_merged
   ch_salmon_result
