@@ -1,5 +1,6 @@
 include { CLEANFASTQ } from './workflows/cleanfastq_wf.nf'
 include { ALIGN_ALL } from './workflows/align_all_wf.nf'
+include { CONTROL_QC } from './workflows/control_qc_wf.nf'
 
 workflow {
 
@@ -44,6 +45,29 @@ workflow {
    ch_kallisto_result = ALIGN_ALL.out.ch_kallisto_result
    ch_fcounts_results = ALIGN_ALL.out.ch_fcounts_results
    ch_htseq_results = ALIGN_ALL.out.ch_htseq_results
+
+   // Workflow to calculate quality metrics
+   CONTROL_QC(
+      ch_hisat2_result,
+      ch_hisat2_bam,
+      ch_star_result,
+      ch_star_bam,
+      ch_star_2ndpass_result,
+      ch_star_2ndpass_bam,
+      ch_subread_result,
+      ch_subread_bam,
+      ch_bbmap_result,
+      ch_bbmap_bam,
+      ch_alignment_all,
+      ch_stringtie_results,
+      ch_stringtie_results_merged,
+      ch_salmon_result,
+      ch_salmon_aln_result,
+      ch_salmon_merged,
+      ch_kallisto_result,
+      ch_fcounts_results,
+      ch_htseq_results
+   )
 
 
    ////Call MultiQC workflow

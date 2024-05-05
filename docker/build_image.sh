@@ -12,6 +12,7 @@ sudo docker build -t ccarlos/registry:salmondecoy -f salmontools_generate_decoy_
 sudo docker build -t ccarlos/registry:kallisto-0.50.1 -f kallisto_image.dockerfile .
 sudo docker build -t ccarlos/registry:subread-2.0.6 -f subread_image.dockerfile .
 sudo docker build -t ccarlos/registry:HTSeq-2.0.5 -f HTSeq_image.dockerfile .
+sudo docker build -t ccarlos/registry:picard-3.1.1 -f picard-3.1.1_image.dockerfile .
 
 
 # Enter to test
