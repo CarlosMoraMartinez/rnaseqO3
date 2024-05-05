@@ -8,7 +8,7 @@ sudo docker pull staphb/trimmomatic:latest
 sudo docker pull staphb/samtools:latest
 
 sudo docker pull pipecraft/cutadapt:0
-sudo docker pull docker pull nanozoo/bbmap:38.86--9ebcbfa
+sudo docker pull docker pull  
 #sudo docker pull staphb/bbtools # Falla, parece que necesita instalar dependencias
 
 sudo docker pull nanozoo/hisat2:2.1.0--66dae66 #2.1.0

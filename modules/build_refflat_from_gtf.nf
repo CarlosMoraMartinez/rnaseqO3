@@ -10,8 +10,8 @@ process buildRefflatFromGTF{
   maxRetries 10
   publishDir "$results_dir/mg00_build_refflat", mode: 'symlink'
   input:
-  path(genome_fasta)
-  path(annot)
+  val(genome_fasta)
+  val(annot)
   
   output:
   path('*.refflat')
@@ -20,10 +20,11 @@ process buildRefflatFromGTF{
   '''
   outname=$(basename -s .gtf !{annot})'.refflat'
         
+  # It fails when symbolic links are used, therefore, val inputs
   java -jar !{params.software.gtftorefflat_path} \
   -g !{annot} \
   -R !{genome_fasta} \
-  -r $outname 2> gtftorefflat.err
+  -r $outname 2>gtftorefflat.err
 
   '''
 }
