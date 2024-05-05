@@ -68,6 +68,8 @@ workflow {
       ch_fcounts_results,
       ch_htseq_results
    )
+   ch_alignment_markdups = CONTROL_QC.out.ch_alignment_markdups
+   ch_picard_rnametrics = CONTROL_QC.out.ch_picard_rnametrics
 
 
    ////Call MultiQC workflow
