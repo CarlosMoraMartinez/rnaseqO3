@@ -33,7 +33,7 @@ process alignSTAR{
   --quantMode TranscriptomeSAM GeneCounts \
   --readFilesCommand zcat \
   --genomeDir !{star_index_dir} \
-  --readFilesIn !{fastq[0]},!{fastq[1]}  \
+  --readFilesIn !{fastq[0]} !{fastq[1]}  \
   --outSAMtype BAM SortedByCoordinate \
   --outFileNamePrefix !{sample_id}_
   

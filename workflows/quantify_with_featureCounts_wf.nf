@@ -14,8 +14,8 @@ workflow QUANTIFY_WITH_FEATURECOUNTS {
   ch_alignment_all = ch_hisat2_bam
     .concat(ch_subread_bam)
     .concat(ch_bbmap_bam)
-    //.concat(ch_star_bam)
-    //.concat(ch_star_2ndpass_bam)
+    .concat(ch_star_bam)
+    .concat(ch_star_2ndpass_bam)
     //.view{ "All alignments concat: $it" }
   
   ch_alignment_all_grouped = ch_alignment_all

@@ -34,7 +34,7 @@ process alignSTAR2ndPass{
   --readFilesCommand zcat \
   --quantMode TranscriptomeSAM GeneCounts \
   --genomeDir !{star_index_dir} \
-  --readFilesIn !{fastq[0]},!{fastq[1]}  \
+  --readFilesIn !{fastq[0]} !{fastq[1]}  \
   --outSAMtype BAM SortedByCoordinate \
   --outFileNamePrefix !{sample_id}_p2_ \
   --sjdbFileChrStartEnd !{splice_junctions_all}
