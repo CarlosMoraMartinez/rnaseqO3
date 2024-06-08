@@ -1,0 +1,107 @@
+custom_logo: "/home/ysanz/G4M/metagen2/assets/Logo-IATA-CSIC.png"
+title: "Metagenomics"
+subtitle: "Quality Report"
+comment: "Estudio de prueba para testar la pipeline"
+report_header_info:
+  - Contact E-mail: "carlos.mora@iata.csic.es"
+  - Application Type: "MGI’s DNBSEQTM microbial genome sequencing technology"
+  - Project Type: "MMHP"
+  - Sequencing Platform: "Ultra-high throughput DNBSEQ-T7 sequencer"
+  - Sequencing Setup: "2x150"
+extra_fn_clean_exts:
+  - ".standard.kraken2.report"
+  - ".standard"
+  - ".trimmed_fastqc.html"
+  - "fastqc.html"
+  - "fastqc.zip"
+  - ".trimmed_fastqc.zip"
+  - ".trimmed.single_fastqc.html"
+  - ".trimmed.single_fastqc.zip"
+  - ".bowtie2.err"
+  - ".bracken.err"
+  - ".standard.kraken2.report"
+  - ".trimlog.out"
+  - ".megahit.err"
+  - "_"
+top_modules:
+ - "trimmomatic":
+      name: "Trimmomatic"
+      info: "Adapter sequence indentification, quality filtering and trimming."
+      path_filters:
+       - "*.trimlog.out"
+ - "bowtie2":
+      name: "Bowtie2"
+      info: "Used to remove human reads."
+ - "kraken":
+      name: "Kraken2"
+      info: "Taxonomic read classification."
+      path_filters:
+       - "*.kraken2.report"
+ - "megahit":
+      name: "MEGAHIT"
+      info: "Assembly from filtered reads"
+      path_filters:
+       - "*.megahit.err"
+ - "quast":
+      name: "QUAST"
+      info: "Quality control for assemblies"
+ - "fastqc":
+      name: "FastQC Before Trimming - R1"
+      info: "This section shows the module with different files"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*.bbduk_fastqc.*"
+       - "*.trimmtc_fastqc."
+       - "*.cutadapt."
+       - "*_2_fastqc*"
+ - "fastqc":
+      name: "FastQC Before Trimming - R2"
+      info: "This section shows the module with different files"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*.trimmtc_fastqc."
+       - "*.cutadapt."
+       - "*.bbduk_fastqc.*"
+       - "*_1_fastqc*"
+ - "fastqc":
+      name: "FastQC Paired After Trimming - R1"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_2.bbduk_fastqc.*"
+       - "*_2.trimmtc_fastqc."
+       - "*_2.cutadapt."
+ - "fastqc":
+      name: "FastQC Paired After Trimming - R2"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_1.bbduk_fastqc.*"
+       - "*_1.trimmtc_fastqc."
+       - "*_1.cutadapt."
+ - "fastqc":
+      name: "FastQC Unpaired After Trimming - R1"
+      path_filters_exclude:
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_1.bbduk_fastqc.*"
+       - "*_1.trimmtc_fastqc."
+       - "*_1.cutadapt."
+       - "*_*.bbduk_fastqc.*"
+       - "*_*.trimmtc_fastqc."
+       - "*_*.cutadapt."
+       - "*_2.trimmtc.single_fastqc.*"
+ - "fastqc":
+      name: "FastQC Unpaired After Trimming - R2"
+      path_filters_exclude:
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_1.bbduk_fastqc.*"
+       - "*_1.trimmtc_fastqc."
+       - "*_1.cutadapt."
+       - "*_*.bbduk_fastqc.*"
+       - "*_*.trimmtc_fastqc."
+       - "*_*.cutadapt."
+       - "*_1.trimmtc.single_fastqc.*"

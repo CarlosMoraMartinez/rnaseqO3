@@ -1,6 +1,7 @@
 include { CLEANFASTQ } from './workflows/cleanfastq_wf.nf'
 include { ALIGN_ALL } from './workflows/align_all_wf.nf'
 include { CONTROL_QC } from './workflows/control_qc_wf.nf'
+include { MULTIQC } from './workflows/multiqc_wf.nf'
 
 workflow {
 
@@ -70,24 +71,32 @@ workflow {
    )
    ch_alignment_markdups = CONTROL_QC.out.ch_alignment_markdups
    ch_picard_rnametrics = CONTROL_QC.out.ch_picard_rnametrics
+   ch_rnaseqc = CONTROL_QC.out.ch_rnaseqc
 
 
    ////Call MultiQC workflow
-//
-   //if(params.workflows.doMultiQC){
-   //   MULTIQC(
-   //     ch_fastqc,
-   //     ch_fastq_processed,
-   //     ch_alignment_output,
-   //     ch_kraken2_output,
-   //     ch_bracken_output,
-   //     ch_metaphlan,
-   //     ch_megahit_output,
-   //     ch_metaquast_output
-   //   )
-   //   ch_multiqc_out = MULTIQC.out.ch_multiqc_out
-   //}else{
-   //   print "Skipping MULTIQC."
-   //   ch_multiqc_out = Channel.from([])
-   //}
+
+   if(params.workflows.doMultiQC){
+      MULTIQC(
+        ch_fastqc,
+        ch_picard_rnametrics,
+        ch_alignment_markdups,
+        ch_rnaseqc,
+        ch_hisat2_result,
+        ch_star_result,
+        ch_star_2ndpass_result,
+        ch_salmon_aln_result,
+        ch_salmon_merged,
+        ch_kallisto_result,
+        ch_fcounts_results,
+        ch_htseq_results,
+        ch_subread_result,
+        ch_bbmap_result,
+        ch_fastq_processed_paired
+      )
+      ch_multiqc_out = MULTIQC.out.ch_multiqc_out
+   }else{
+      print "Skipping MULTIQC."
+      ch_multiqc_out = Channel.from([])
+   }
 }

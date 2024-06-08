@@ -49,7 +49,7 @@ workflow CONTROL_QC{
       buildRefflatFromGTF(params.buildRefflatFromGTF.genome_fasta, 
                           params.buildRefflatFromGTF.annot)
       ch_refflat = buildRefflatFromGTF.out
-      .view{ "REFFLAT file built: $it" }
+      //.view{ "REFFLAT file built: $it" }
     }
 
     //Build interval_list file from BED with rRNA regions if necessary
@@ -57,7 +57,7 @@ workflow CONTROL_QC{
       buildIntervalListFromBed(params.buildIntervalListFromBed.genome_fasta,
                               params.buildIntervalListFromBed.bed)
       ch_rrna_intervallist = buildIntervalListFromBed.out
-      .view{ "INTERVAL_LIST file built: $it" }
+      //.view{ "INTERVAL_LIST file built: $it" }
     }
 
     picardRNASeqMetrics(ch_refflat, ch_rrna_intervallist, ch_alignment_2_qual)
@@ -69,7 +69,7 @@ workflow CONTROL_QC{
   if(params.rnaSeQC.do){
     rnaSeQC(params.rnaSeQC.annot, ch_alignment_2_qual)
     ch_rnaseqc = rnaSeQC.out
-    .view{ "MarkDuplicates output: $it" }
+    //.view{ "MarkDuplicates output: $it" }
   }
 
 
