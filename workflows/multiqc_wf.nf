@@ -86,12 +86,15 @@ workflow MULTIQC{
   //.view{"RNA-SeQC: $it"}
   .concat(all_reports).flatten().collect()
 
-  //bowtie2_err = ch_alignment_output.map{it -> it[2]}.collect().ifEmpty([])
-  //kraken_err = ch_kraken2_output.map{it -> it[2]}.collect().ifEmpty([])
-  //bracken_err = ch_bracken_output.map{it -> it[4]}.collect().ifEmpty([])
-  //metaphlan_err = ch_metaphlan_output.map{it -> it[1]}.collect().ifEmpty([])
-  //megahit_err = ch_megahit_output.map{it -> it[4]}.collect().ifEmpty([])
-  //ch_metaquast_tsv = ch_metaquast_output.map{it -> it[3]}.collect().ifEmpty([])
+  // featureCounts
+  all_reports = ch_fcounts_results.map{it -> it[2]}.ifEmpty([])
+  .view{"featureCounts: $it"}
+  .concat(all_reports).flatten().collect()
+
+  // HTSeq
+  all_reports = ch_htseq_results.map{it -> it[1, 2]}.ifEmpty([])
+  .view{"HTSeq: $it"}
+  .concat(all_reports).flatten().collect()
 
   //Call multiQC process
   multiQC(params.multiQC.configyaml,

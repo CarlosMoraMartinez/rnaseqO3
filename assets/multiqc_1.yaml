@@ -127,6 +127,31 @@ top_modules:
       path_filters:
        - "*_STAR2_picard_markduplicates.txt" 
        - "*_STAR2_picard_rnaseqmetrics.txt"
+ - "htseq":
+      name: "HTSeq - HISAT2 pass"
+      path_filters:
+       - "STAR2_htseq_union_all.err" 
+       - "STAR_htseq_union_all.txt"
+ - "featureCounts":
+      name: "featureCounts - HISAT2"
+      path_filters:
+       - "HISAT2_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - STAR 1st pass"
+      path_filters:
+       - "STAR_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - STAR 2nd pass"
+      path_filters:
+       - "STAR2_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - BBMap"
+      path_filters:
+       - "BBMap_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - Subread"
+      path_filters:
+       - "Subread_featureCounts.txt.summary"  
  - "fastqc":
       name: "FastQC Before Trimming - R1"
       info: "This section shows the module with different files"
