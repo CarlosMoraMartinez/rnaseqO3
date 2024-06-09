@@ -86,13 +86,13 @@ workflow {
         ch_star_result,
         ch_star_2ndpass_result,
         ch_salmon_aln_result,
-        ch_salmon_merged,
+        ch_salmon_result,
         ch_kallisto_result,
         ch_fcounts_results,
         ch_htseq_results,
         ch_subread_result,
         ch_bbmap_result,
-        ch_fastq_processed_paired
+        ch_fastq_processed
       )
       ch_multiqc_out = MULTIQC.out.ch_multiqc_out
    }else{

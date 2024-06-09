@@ -4,9 +4,9 @@ subtitle: "Quality Report"
 comment: "Estudio de prueba para testar la pipeline"
 report_header_info:
   - Contact E-mail: "carlos.mora@iata.csic.es"
-  - Application Type: "MGI’s DNBSEQTM microbial genome sequencing technology"
-  - Project Type: "MMHP"
-  - Sequencing Platform: "Ultra-high throughput DNBSEQ-T7 sequencer"
+  - Application Type: "RNA-seq"
+  - Project Type: "RNA-seq"
+  - Sequencing Platform: "Illumina NovaSeq 6000"
   - Sequencing Setup: "2x150"
 extra_fn_clean_exts:
   - ".standard.kraken2.report"
@@ -17,11 +17,16 @@ extra_fn_clean_exts:
   - ".trimmed_fastqc.zip"
   - ".trimmed.single_fastqc.html"
   - ".trimmed.single_fastqc.zip"
-  - ".bowtie2.err"
-  - ".bracken.err"
-  - ".standard.kraken2.report"
   - ".trimlog.out"
-  - ".megahit.err"
+  - ".star.flagstat"
+  - ".starp2.flagstat"
+  - ".star.transcriptome.flagstat"
+  - ".starp2.transcriptome.flagstat"
+  - "_Log.final.out"
+  - "_p2_Log.final.out"
+  - ".bbmap"
+  - ".subread"
+
   - "_"
 top_modules:
  - "trimmomatic":
@@ -29,22 +34,99 @@ top_modules:
       info: "Adapter sequence indentification, quality filtering and trimming."
       path_filters:
        - "*.trimlog.out"
- - "bowtie2":
-      name: "Bowtie2"
-      info: "Used to remove human reads."
- - "kraken":
-      name: "Kraken2"
-      info: "Taxonomic read classification."
+ - "bbduk":
+      name: "BBDuk"
       path_filters:
-       - "*.kraken2.report"
- - "megahit":
-      name: "MEGAHIT"
-      info: "Assembly from filtered reads"
+       - "*_bbduk.err"
+ - "cutadapt":
+      name: "Cutadapt"
       path_filters:
-       - "*.megahit.err"
- - "quast":
-      name: "QUAST"
-      info: "Quality control for assemblies"
+       - "*_cutadapt.log"
+ - "hisat2":
+      path_filters:
+       - "*.hisat2.summary.txt"
+ - "samtools":
+      name: "HISAT2 - Samtools Flagstat"
+      path_filters:
+       - "*.hisat2.flagstat"
+ - "star":
+      name: "STAR 1st pass"
+      path_filters:
+       - "*_Log.final.out"
+       - "*_ReadsPerGene.out.tab"
+      path_filters_exclude:
+       - "*_p2_Log.final.out"
+       - "*_p2_ReadsPerGene.out.tab"
+ - "samtools":
+      name: "STAR 1st pass - Samtools Flagstat"
+      path_filters:
+       - "*.star.flagstat" 
+ - "samtools":
+      name: "STAR 1st pass Transcriptome - Samtools Flagstat"
+      path_filters:
+       - "*.star.transcriptome.flagstat" 
+ - "star":
+      name: "STAR 2nd pass"
+      path_filters:
+       - "*_p2_Log.final.out"
+       - "*_p2_ReadsPerGene.out.tab"
+ - "samtools":
+      name: "STAR 2nd pass - Samtools Flagstat"
+      path_filters:
+       - "*.starp2.flagstat" 
+ - "samtools":
+      name: "STAR 2nd pass Transcriptome - Samtools Flagstat"
+      path_filters:
+       - "*.starp2.transcriptome.flagstat" 
+ - "bbmap":
+      name: "BBMap"
+      path_filters:
+       - "*_bbmap.err"
+       - "*.bhist.bbmap.txt"
+       - "*.aqhist.bbmap.txt"
+       - "*.gchist.bbmap.txt"
+       - "*.indelhist.bbmap.txt"
+       - "*.mhist.bbmap.txt"
+       - "*.lhist.bbmap.txt"
+ - "samtools":
+      name: "BBMap - Samtools Flagstat"
+      path_filters:
+       - "*.bbmap.flagstat" 
+ - "samtools":
+      name: "Subread - Samtools Flagstat"
+      path_filters:
+       - "*.subread.flagstat" 
+ - "salmon":
+      name: "Salmon Quant from fastq"
+ - "kallisto":
+      name: "Kallisto"
+      path_filters:
+       - "*.kallisto.err"
+ - "rna_seqc":
+      name: "RNA-SeQC HISAT2"
+      path_filters:
+       - "*HISAT2_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC STAR"
+      path_filters:
+       - "*STAR_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC STAR 2nd pass"
+      path_filters:
+       - "*STAR2_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC BBMap"
+      path_filters:
+       - "*BBMap_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC Subread"
+      path_filters:
+       - "*Subread_rnaseqc*"
+ - "picard":
+      name: "Picard - STAR 2nd pass"
+      path_filters:
+       - "*_STAR2_picard_markduplicates.txt" 
+       - "*_STAR2_picard_rnaseqmetrics.txt"
  - "fastqc":
       name: "FastQC Before Trimming - R1"
       info: "This section shows the module with different files"

@@ -23,7 +23,6 @@ process rnaSeQC{
   mkdir $outdir
 
   rnaseqc !{params.rnaSeQC.options} \
-   --stranded !{params.rnaSeQC.stranded} \
    --detection-threshold !{params.rnaSeQC.detection_threshold} \
    !{annot} !{bam} $outdir 2> $errorfile 
 

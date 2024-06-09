@@ -65,7 +65,8 @@ workflow QUANTIFY_WITH_SALMON {
   if(params.workflows.do_star && params.quantBamSalmon.do_salmon){
     ch_alignment_all_bytrans = ch_star_bam_bytranscript  //Concat STAR results from 1st and 2nd pass
       .concat(ch_star_2ndpass_bam_bytranscript)
-    quantBamSalmon(ch_alignment_all_bytrans)  //Quantify with Salmon in alignment mode
+    quantBamSalmon(params.quantBamSalmon.transcripts_fasta,
+                   ch_alignment_all_bytrans)  //Quantify with Salmon in alignment mode
     ch_salmon_aln_result = quantBamSalmon.out
     //.view{ "Salmon from Alignment results: $it" }
   }// Salmon quant from SAM file 
