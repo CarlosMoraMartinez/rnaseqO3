@@ -4,6 +4,8 @@ sudo docker pull staphb/fastqc:latest
 sudo docker pull nsheff/pigz:latest
 sudo docker pull staphb/seqkit:latest
 sudo docker pull staphb/multiqc:latest
+sudo docker pull multiqc/multiqc
+
 sudo docker pull staphb/trimmomatic:latest
 sudo docker pull staphb/samtools:latest
 sudo docker pull gcr.io/broad-cga-aarong-gtex/rnaseqc:latest

@@ -26,8 +26,13 @@ extra_fn_clean_exts:
   - "_p2_Log.final.out"
   - ".bbmap"
   - ".subread"
-
   - "_"
+table_columns_visible:
+  picard: 
+   markdups: False
+   rnaseqmetrics: False
+picard_config:
+       s_name_filenames: true
 top_modules:
  - "trimmomatic":
       name: "Trimmomatic"
@@ -123,15 +128,10 @@ top_modules:
       path_filters:
        - "*Subread_rnaseqc*"
  - "picard":
-      name: "Picard - STAR 2nd pass"
+      name: "Picard"
       path_filters:
-       - "*_STAR2_picard_markduplicates.txt" 
-       - "*_STAR2_picard_rnaseqmetrics.txt"
- - "htseq":
-      name: "HTSeq - HISAT2 pass"
-      path_filters:
-       - "STAR2_htseq_union_all.err" 
-       - "STAR_htseq_union_all.txt"
+       - "*_picard_markduplicates.txt" 
+       - "*_picard_rnaseqmetrics.txt"
  - "featureCounts":
       name: "featureCounts - HISAT2"
       path_filters:

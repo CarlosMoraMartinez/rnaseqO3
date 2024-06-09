@@ -88,13 +88,13 @@ workflow MULTIQC{
 
   // featureCounts
   all_reports = ch_fcounts_results.map{it -> it[2]}.ifEmpty([])
-  .view{"featureCounts: $it"}
+  //.view{"featureCounts: $it"}
   .concat(all_reports).flatten().collect()
 
-  // HTSeq
-  all_reports = ch_htseq_results.map{it -> it[1, 2]}.ifEmpty([])
-  .view{"HTSeq: $it"}
-  .concat(all_reports).flatten().collect()
+  // HTSeq -> Doesn't support a single file for all samples
+  //all_reports = ch_htseq_results.map{it -> it[1, 2]}.ifEmpty([])
+  //.view{"HTSeq: $it"}
+  //.concat(all_reports).flatten().collect()
 
   //Call multiQC process
   multiQC(params.multiQC.configyaml,

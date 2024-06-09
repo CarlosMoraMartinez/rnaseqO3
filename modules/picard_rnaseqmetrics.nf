@@ -18,8 +18,8 @@ process picardRNASeqMetrics{
 
   shell:
   '''
-  outreport=!{sample_id}_!{flag}_picard_rnaseqmetrics.txt
-  errorfile=!{sample_id}_!{flag}_picard_rnaseqmetrics.err
+  outreport=!{sample_id}-!{flag}_picard_rnaseqmetrics.txt
+  errorfile=!{sample_id}-!{flag}_picard_rnaseqmetrics.err
 
   java -jar !{params.software.picard_path} CollectRnaSeqMetrics \
               I=!{bam} O=$outreport \

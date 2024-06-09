@@ -16,9 +16,9 @@ process picardMarkDuplicates{
 
   shell:
   '''
-  outreport=!{sample_id}_!{flag}_picard_markduplicates.txt
+  outreport=!{sample_id}-!{flag}_picard_markduplicates.txt
   outbam=$(basename -s .bam !{bam})'.markdups.bam'
-  errorfile=!{sample_id}_!{flag}_picard_markduplicates.err
+  errorfile=!{sample_id}-!{flag}_picard_markduplicates.err
 
   java -jar !{params.software.picard_path} MarkDuplicates \
               --INPUT !{bam} --OUTPUT $outbam !{params.picardMarkDuplicates.options} \
