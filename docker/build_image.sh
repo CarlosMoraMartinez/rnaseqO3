@@ -19,7 +19,7 @@ sudo docker build -t ccarlos/registry:picard-3.1.1 -f picard-3.1.1_image.dockerf
 sudo docker run -ti --entrypoint /bin/bash ccarlos/registry:kraken_with_pigz
 
 # Enter and mount your home to the container
-sudo docker run -ti  --mount type=bind,source=/home,target=/home  --entrypoint /bin/bash ccarlos/registry:HISAT2-2.2.1
+sudo docker run -ti  --mount type=bind,source=/home,target=/home --entrypoint /bin/bash ccarlos/registry:HISAT2-2.2.1
 
 # Save images in order to transfer to server
 sudo docker save -o dockerimage_kraken_with_pigz.tar ccarlos/registry:kraken_with_pigz 

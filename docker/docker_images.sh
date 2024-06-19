@@ -37,3 +37,4 @@ docker pull carlosmora91/cmora_images:HTSeq-2.0.5
 docker pull carlosmora91/cmora_images:picard-3.1.1
 
 
+
