@@ -23,3 +23,17 @@ sudo docker pull mpgagebioinformatics/star:2.7.11b
 # metaphlan --install --bowtie2db /home/ccarlos/data/resources/metaphlan
 
 sudo docker pull combinelab/salmon:latest
+
+## own images at Dockerhub
+docker pull carlosmora91/cmora_images:samtools-1.20
+docker pull carlosmora91/cmora_images:STAR-2.7.11b
+docker pull carlosmora91/cmora_images:htslib-1.20
+docker pull carlosmora91/cmora_images:salmondecoy
+docker pull carlosmora91/cmora_images:kallisto-0.50.1
+docker pull carlosmora91/cmora_images:subread-2.0.6
+docker pull carlosmora91/cmora_images:HISAT2-2.2.1
+docker pull carlosmora91/cmora_images:stringtie2-v2.2.2
+docker pull carlosmora91/cmora_images:HTSeq-2.0.5
+docker pull carlosmora91/cmora_images:picard-3.1.1
+
+
