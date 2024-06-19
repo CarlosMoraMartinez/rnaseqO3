@@ -9,6 +9,7 @@ process quantBamSalmon{
   maxRetries 10
   publishDir "$results_dir/mg03_salmon_quant_frombam", mode: 'symlink'
   input:
+  path transcripts_fasta
   tuple(val(flag), val(sample_id), path(bam), path(bai))
   
   output:
@@ -21,7 +22,7 @@ process quantBamSalmon{
 
   ## Quantifying in alignment based mode
   salmon quant --threads !{params.resources.quantBamSalmon.cpus} \
-      -t !{params.quantBamSalmon.transcripts_fasta} \
+      -t !{transcripts_fasta} \
       -l IU !{params.quantBamSalmon.options} \
       -a !{bam} \
       -o $outdir 2> $errorfile

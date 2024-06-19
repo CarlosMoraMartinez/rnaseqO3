@@ -1,0 +1,207 @@
+custom_logo: "/home/ysanz/G4M/metagen2/assets/Logo-IATA-CSIC.png"
+title: "Metagenomics"
+subtitle: "Quality Report"
+comment: "Estudio de prueba para testar la pipeline"
+report_header_info:
+  - Contact E-mail: "carlos.mora@iata.csic.es"
+  - Application Type: "RNA-seq"
+  - Project Type: "RNA-seq"
+  - Sequencing Platform: "Illumina NovaSeq 6000"
+  - Sequencing Setup: "2x150"
+extra_fn_clean_exts:
+  - ".standard.kraken2.report"
+  - ".standard"
+  - ".trimmed_fastqc.html"
+  - "fastqc.html"
+  - "fastqc.zip"
+  - ".trimmed_fastqc.zip"
+  - ".trimmed.single_fastqc.html"
+  - ".trimmed.single_fastqc.zip"
+  - ".trimlog.out"
+  - ".star.flagstat"
+  - ".starp2.flagstat"
+  - ".star.transcriptome.flagstat"
+  - ".starp2.transcriptome.flagstat"
+  - "_Log.final.out"
+  - "_p2_Log.final.out"
+  - ".bbmap"
+  - ".subread"
+  - "_"
+table_columns_visible:
+  "picard: RnaSeqMetrics": False
+  "picard: Mark Duplicates": False
+picard_config:
+       s_name_filenames: true
+top_modules:
+ - "trimmomatic":
+      name: "Trimmomatic"
+      info: "Adapter sequence indentification, quality filtering and trimming."
+      path_filters:
+       - "*.trimlog.out"
+ - "bbduk":
+      name: "BBDuk"
+      path_filters:
+       - "*_bbduk.err"
+ - "cutadapt":
+      name: "Cutadapt"
+      path_filters:
+       - "*_cutadapt.log"
+ - "hisat2":
+      path_filters:
+       - "*.hisat2.summary.txt"
+ - "samtools":
+      name: "HISAT2 - Samtools Flagstat"
+      path_filters:
+       - "*.hisat2.flagstat"
+ - "star":
+      name: "STAR 1st pass"
+      path_filters:
+       - "*_Log.final.out"
+       - "*_ReadsPerGene.out.tab"
+      path_filters_exclude:
+       - "*_p2_Log.final.out"
+       - "*_p2_ReadsPerGene.out.tab"
+ - "samtools":
+      name: "STAR 1st pass - Samtools Flagstat"
+      path_filters:
+       - "*.star.flagstat" 
+ - "samtools":
+      name: "STAR 1st pass Transcriptome - Samtools Flagstat"
+      path_filters:
+       - "*.star.transcriptome.flagstat" 
+ - "star":
+      name: "STAR 2nd pass"
+      path_filters:
+       - "*_p2_Log.final.out"
+       - "*_p2_ReadsPerGene.out.tab"
+ - "samtools":
+      name: "STAR 2nd pass - Samtools Flagstat"
+      path_filters:
+       - "*.starp2.flagstat" 
+ - "samtools":
+      name: "STAR 2nd pass Transcriptome - Samtools Flagstat"
+      path_filters:
+       - "*.starp2.transcriptome.flagstat" 
+ - "bbmap":
+      name: "BBMap"
+      path_filters:
+       - "*_bbmap.err"
+       - "*.bhist.bbmap.txt"
+       - "*.aqhist.bbmap.txt"
+       - "*.gchist.bbmap.txt"
+       - "*.indelhist.bbmap.txt"
+       - "*.mhist.bbmap.txt"
+       - "*.lhist.bbmap.txt"
+ - "samtools":
+      name: "BBMap - Samtools Flagstat"
+      path_filters:
+       - "*.bbmap.flagstat" 
+ - "samtools":
+      name: "Subread - Samtools Flagstat"
+      path_filters:
+       - "*.subread.flagstat" 
+ - "salmon":
+      name: "Salmon Quant from fastq"
+ - "kallisto":
+      name: "Kallisto"
+      path_filters:
+       - "*.kallisto.err"
+ - "rna_seqc":
+      name: "RNA-SeQC HISAT2"
+      path_filters:
+       - "*HISAT2_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC STAR"
+      path_filters:
+       - "*STAR_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC STAR 2nd pass"
+      path_filters:
+       - "*STAR2_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC BBMap"
+      path_filters:
+       - "*BBMap_rnaseqc*"
+ - "rna_seqc":
+      name: "RNA-SeQC Subread"
+      path_filters:
+       - "*Subread_rnaseqc*"
+ - "picard":
+      name: "Picard"
+      path_filters:
+       - "*_picard_markduplicates.txt" 
+       - "*_picard_rnaseqmetrics.txt"
+ - "featureCounts":
+      name: "featureCounts - HISAT2"
+      path_filters:
+       - "HISAT2_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - STAR 1st pass"
+      path_filters:
+       - "STAR_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - STAR 2nd pass"
+      path_filters:
+       - "STAR2_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - BBMap"
+      path_filters:
+       - "BBMap_featureCounts.txt.summary"  
+ - "featureCounts":
+      name: "featureCounts - Subread"
+      path_filters:
+       - "Subread_featureCounts.txt.summary"  
+ - "fastqc":
+      name: "FastQC Before Trimming - R1"
+      info: "This section shows the module with different files"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*.bbduk_fastqc.*"
+       - "*.trimmtc_fastqc."
+       - "*.cutadapt."
+       - "*_2_fastqc*"
+ - "fastqc":
+      name: "FastQC Before Trimming - R2"
+      info: "This section shows the module with different files"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*.trimmtc_fastqc."
+       - "*.cutadapt."
+       - "*.bbduk_fastqc.*"
+       - "*_1_fastqc*"
+ - "fastqc":
+      name: "FastQC Paired After Trimming - R1"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_2.bbduk_fastqc.*"
+       - "*_2.trimmtc_fastqc."
+       - "*_2.cutadapt."
+ - "fastqc":
+      name: "FastQC Paired After Trimming - R2"
+      path_filters_exclude:
+       - "*.trimmtc.single_fastqc.*"
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_1.bbduk_fastqc.*"
+       - "*_1.trimmtc_fastqc."
+       - "*_1.cutadapt."
+ - "fastqc":
+      name: "FastQC Unpaired After Trimming - R1"
+      path_filters_exclude:
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_*.bbduk_fastqc.*"
+       - "*_*.trimmtc_fastqc."
+       - "*_*.cutadapt_fastqc"
+       - "*_2.trimmtc.single_fastqc.*"
+ - "fastqc":
+      name: "FastQC Unpaired After Trimming - R2"
+      path_filters_exclude:
+       - "*_1_fastqc*"
+       - "*_2_fastqc*"
+       - "*_*.bbduk_fastqc.*"
+       - "*_*.trimmtc_fastqc."
+       - "*_*.cutadapt_fastqc"
+       - "*_1.trimmtc.single_fastqc.*"

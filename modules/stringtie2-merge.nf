@@ -20,6 +20,7 @@ process mergeStringtie2{
   out_transccounts=!{flag}_Stringtie_transcript_count_matrix.csv
   errorfile=!{flag}_Stringtie_merge.err
   
+  #python2 version
   prepDE.py -g $out_genecounts -t $out_transccounts \
             -l !{params.mergeStringtie2.readlength} 2>$errorfile
   

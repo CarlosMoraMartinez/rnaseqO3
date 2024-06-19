@@ -13,7 +13,7 @@ process quantKallisto{
   tuple(val(sample_id), path(fastq))
   
   output:
-  tuple(val(sample_id), path('*_kallisto'))
+  tuple(val(sample_id), path('*_kallisto'), path("*.kallisto.err"))
 
   shell:
   '''
