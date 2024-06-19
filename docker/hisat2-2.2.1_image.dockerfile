@@ -3,9 +3,10 @@ FROM ccarlos/registry:samtools-1.20
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y unzip && \
-    apt-get install -y python3.10 && \
-    ln -s /usr/bin/python3.10 /usr/bin/python3 && \
-    ln -s /usr/bin/python3.10 /usr/bin/python
+    apt-get install -y python3 && \
+    ln -s /usr/bin/python3 /usr/bin/python
+#    alias python=python3 && \
+#    echo 'alias python=python3' >> /root/.bashrc
 
 
 
