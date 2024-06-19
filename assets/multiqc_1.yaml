@@ -28,9 +28,8 @@ extra_fn_clean_exts:
   - ".subread"
   - "_"
 table_columns_visible:
-  picard: 
-   markdups: False
-   rnaseqmetrics: False
+  "picard: RnaSeqMetrics": False
+  "picard: Mark Duplicates": False
 picard_config:
        s_name_filenames: true
 top_modules:
