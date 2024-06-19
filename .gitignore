@@ -1,0 +1,7 @@
+work/
+.nextflow/
+.nextflow.log
+.nextflow.log.*
+pipeline_dag.html
+timeline.html
+report.html

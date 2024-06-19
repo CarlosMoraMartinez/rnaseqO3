@@ -1,8 +1,10 @@
 include { ALIGN_WITH_HISAT2 } from './align_with_hisat2_wf'
 include { ALIGN_WITH_SUBREAD } from './align_with_subread_wf'
+include { ALIGN_WITH_BBMAP } from './align_with_bbmap_wf'
 include { ALIGN_WITH_STAR } from './align_with_star_wf'
 include { QUANTIFY_WITH_STRINGTIE } from './quantify_with_stringtie_wf'
 include { QUANTIFY_WITH_FEATURECOUNTS } from './quantify_with_featureCounts_wf'
+include { QUANTIFY_WITH_HTSEQ } from './quantify_with_htseq_wf'
 include { QUANTIFY_WITH_SALMON } from './quantify_with_salmon_wf'
 include { QUANTIFY_WITH_KALLISTO } from './quantify_with_kallisto_wf'
 
@@ -30,6 +32,17 @@ workflow ALIGN_ALL {
     ch_subread_bam = ALIGN_WITH_SUBREAD.out.ch_subread_bam
   } // end Subread
 
+  //Align using BBMap
+  ch_bbmap_result = Channel.from([])
+  ch_bbmap_bam = Channel.from([])
+
+  if(params.workflows.do_bbmap){ 
+    ALIGN_WITH_BBMAP(ch_fastq_processed_paired)
+    ch_bbmap_result = ALIGN_WITH_BBMAP.out.ch_bbmap_result
+    ch_bbmap_bam = ALIGN_WITH_BBMAP.out.ch_bbmap_bam
+  } // end BBMap
+
+
   //Align using STAR
   ch_star_result = Channel.from([])
   ch_star_bam = Channel.from([])
@@ -50,16 +63,21 @@ workflow ALIGN_ALL {
     ch_star_2ndpass_bam_bytranscript = ALIGN_WITH_STAR.out.ch_star_2ndpass_bam_bytranscript
   }// end STAR
 
+  //First concatenate all alignment channels
+  ch_alignment_all = ch_hisat2_bam
+    .concat(ch_star_bam)
+    .concat(ch_star_2ndpass_bam)
+    .concat(ch_subread_bam)
+    .concat(ch_bbmap_bam)
+    //.view{ "All alignments concat: $it" }
+
   // Quantify using STRINGTIE
   ch_stringtie_results_merged = Channel.from([])
   ch_stringtie_results = Channel.from([])
   if(params.workflows.do_stringtie){
 
     QUANTIFY_WITH_STRINGTIE(
-      ch_hisat2_bam, 
-      ch_star_bam, 
-      ch_star_2ndpass_bam,
-      ch_subread_bam
+      ch_alignment_all
     )
 
     ch_stringtie_results_merged = QUANTIFY_WITH_STRINGTIE.out.ch_stringtie_results_merged
@@ -71,14 +89,22 @@ workflow ALIGN_ALL {
   if(params.workflows.do_featureCounts){
 
     QUANTIFY_WITH_FEATURECOUNTS(
-      ch_hisat2_bam, 
-      ch_star_bam, 
-      ch_star_2ndpass_bam,
-      ch_subread_bam
+      ch_alignment_all
     )
 
     ch_fcounts_results = QUANTIFY_WITH_FEATURECOUNTS.out.ch_fcounts_results
   } // end featureCounts
+
+  // Quantify using HTSeq
+  ch_htseq_results = Channel.from([])
+  if(params.workflows.do_htseq){
+
+    QUANTIFY_WITH_HTSEQ(
+      ch_alignment_all
+    )
+
+    ch_htseq_results = QUANTIFY_WITH_HTSEQ.out.ch_htseq_results
+  } // end HTSeq
 
   // Quantify using   SALMON
   ch_salmon_result = Channel.from([])
@@ -99,6 +125,7 @@ workflow ALIGN_ALL {
   } // end SALMON
 
   // Quantify with Kallisto
+  ch_kallisto_result = Channel.from([])
   if(params.workflows.do_kallisto){
     QUANTIFY_WITH_KALLISTO(ch_fastq_processed_paired)
     
@@ -114,6 +141,9 @@ workflow ALIGN_ALL {
   ch_star_2ndpass_bam
   ch_subread_result
   ch_subread_bam
+  ch_bbmap_result
+  ch_bbmap_bam
+  ch_alignment_all
   ch_stringtie_results
   ch_stringtie_results_merged
   ch_salmon_result
@@ -121,4 +151,5 @@ workflow ALIGN_ALL {
   ch_salmon_merged
   ch_kallisto_result
   ch_fcounts_results
+  ch_htseq_results
 }
