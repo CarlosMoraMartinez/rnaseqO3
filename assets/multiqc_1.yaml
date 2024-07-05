@@ -1,4 +1,4 @@
-custom_logo: "/home/ysanz/G4M/metagen2/assets/Logo-IATA-CSIC.png"
+custom_logo: "/media/DATOS/BASESDATOS/logos_etc/Logo-IATA-CSIC.png"
 title: "Metagenomics"
 subtitle: "Quality Report"
 comment: "Estudio de prueba para testar la pipeline"
@@ -28,7 +28,7 @@ extra_fn_clean_exts:
   - ".subread"
   - "_"
 table_columns_visible:
-  "picard: RnaSeqMetrics": True
+  "picard: RnaSeqMetrics": False
   "picard: Mark Duplicates": False
 picard_config:
        s_name_filenames: true
