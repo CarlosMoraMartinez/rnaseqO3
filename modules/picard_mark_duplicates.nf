@@ -19,11 +19,12 @@ process picardMarkDuplicates{
   outreport=!{sample_id}-!{flag}_picard_markduplicates.txt
   outbam=!{sample_id}-!{flag}'.markdups.bam'
   errorfile=!{sample_id}-!{flag}_picard_markduplicates.err
-
+  outbai=!{sample_id}-!{flag}'.markdups.bai'
   java -jar !{params.software.picard_path} MarkDuplicates \
               --INPUT !{bam} --OUTPUT $outbam !{params.picardMarkDuplicates.options} \
                --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
                --METRICS_FILE $outreport 2> $errorfile
   
+  mv $outbai $outbam'.bai'
   '''
 }
