@@ -25,7 +25,5 @@ process picardMarkDuplicates{
                --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
                --METRICS_FILE $outreport 2> $errorfile
   
-  bai_created=$(basename -s .bam !{bam})'.markdups.bai'
-  mv $bai_created $outbam'.bai'
   '''
 }
