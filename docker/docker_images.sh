@@ -5,6 +5,7 @@ sudo docker pull nsheff/pigz:latest
 sudo docker pull staphb/seqkit:latest
 sudo docker pull staphb/multiqc:latest
 sudo docker pull multiqc/multiqc
+sudo docker pull pegi3s/multiqc:latest  #Use this one with version 1.14; the other ones with 1.22/23 do not recognise picard rnaseqmetrics
 
 sudo docker pull staphb/trimmomatic:latest
 sudo docker pull staphb/samtools:latest
