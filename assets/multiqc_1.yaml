@@ -136,17 +136,17 @@ top_modules:
       path_filters:
        - "*STAR_picard_markduplicates.txt" 
        - "*STAR_picard_rnaseqmetrics.txt"
-- "picard":
+ - "picard":
       name: "Picard - STAR, 2nd pass"
       path_filters:
        - "*STAR2_picard_markduplicates.txt" 
        - "*STAR2_picard_rnaseqmetrics.txt"
-- "picard":
+ - "picard":
       name: "Picard - BBMap"
       path_filters:
        - "*BBMap_picard_markduplicates.txt" 
        - "*BBMap_picard_rnaseqmetrics.txt"
-- "picard":
+ - "picard":
       name: "Picard - Subread"
       path_filters:
        - "*Subread_picard_markduplicates.txt" 
