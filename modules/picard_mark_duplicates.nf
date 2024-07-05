@@ -16,7 +16,7 @@ process picardMarkDuplicates{
 
   shell:
   '''
-  newinputbam=!{sample_id}-!{flag}'.sorted.bam'
+  newinputbam=!{sample_id}_!{flag}'.sorted.bam'
   newinputbai=$newinputbam.bai
 
   outreport=!{sample_id}-!{flag}_picard_markduplicates.txt

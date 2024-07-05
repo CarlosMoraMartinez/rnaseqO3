@@ -20,8 +20,8 @@ process picardRNASeqMetrics{
   '''
   outreport=!{sample_id}-!{flag}_picard_rnaseqmetrics.txt
   errorfile=!{sample_id}-!{flag}_picard_rnaseqmetrics.err
-  newbamname=!{sample_id}-!{flag}.bam
-  newbainame=!{sample_id}-!{flag}.bam.bai
+  newbamname=!{sample_id}_!{flag}.bam
+  newbainame=!{sample_id}_!{flag}.bam.bai
 
   mv !{bam} $newbamname
   mv !{bai} $newbainame
