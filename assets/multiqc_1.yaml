@@ -127,10 +127,15 @@ top_modules:
       path_filters:
        - "*Subread_rnaseqc*"
  - "picard":
-      name: "Picard"
+      name: "Picard - STAR"
       path_filters:
-       - "*_picard_markduplicates.txt" 
-       - "*_picard_rnaseqmetrics.txt"
+       - "*STAR_picard_markduplicates.txt" 
+       - "*STAR_picard_rnaseqmetrics.txt"
+ - "picard":
+      name: "Picard - HISAT2"
+      path_filters:
+       - "*HISAT2_picard_markduplicates.txt" 
+       - "*HISAT2_picard_rnaseqmetrics.txt"
  - "featureCounts":
       name: "featureCounts - HISAT2"
       path_filters:
