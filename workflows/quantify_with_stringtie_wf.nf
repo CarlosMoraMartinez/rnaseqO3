@@ -20,10 +20,13 @@ workflow QUANTIFY_WITH_STRINGTIE {
     //.view{ "Stringtie results grouped: $it" }
 
   // Merge results from all samples, by aligner
+  if(params.mergeStringtie2.do_merge){
   mergeStringtie2(ch_stringtie_results_grouped)
   ch_stringtie_results_merged = mergeStringtie2.out
     //.view{ "Stringtie merge prepDE.py results: $it" }
-
+  } else {
+    ch_stringtie_results_merged = Channel.from([])
+  }
   emit:
   ch_stringtie_results
   ch_stringtie_results_merged
