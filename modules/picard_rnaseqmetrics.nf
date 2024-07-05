@@ -20,9 +20,13 @@ process picardRNASeqMetrics{
   '''
   outreport=!{sample_id}-!{flag}_picard_rnaseqmetrics.txt
   errorfile=!{sample_id}-!{flag}_picard_rnaseqmetrics.err
+  newbamname=!{sample_id}-!{flag}.bam
+  newbainame=!{sample_id}-!{flag}.bam.bai
 
+  mv !{bam} $newbamname
+  mv !{bai} $newbainame
   java -jar !{params.software.picard_path} CollectRnaSeqMetrics \
-              I=!{bam} O=$outreport \
+              I=$newbamname O=$outreport \
               REF_FLAT=!{refflat} !{params.picardRNASeqMetrics.options} \
               RIBOSOMAL_INTERVALS=!{rRNA_intervallist} \
               STRAND=!{params.picardRNASeqMetrics.strand} 2> $errorfile
