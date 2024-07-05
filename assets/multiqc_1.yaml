@@ -28,8 +28,8 @@ extra_fn_clean_exts:
   - ".subread"
   - "_"
 table_columns_visible:
-  "picard: RnaSeqMetrics": False
-  "picard: Mark Duplicates": False
+  "picard: RnaSeqMetrics": false
+  "picard: Mark Duplicates": false
 picard_config:
        s_name_filenames: true
 top_modules:
@@ -127,15 +127,30 @@ top_modules:
       path_filters:
        - "*Subread_rnaseqc*"
  - "picard":
-      name: "Picard - STAR"
-      path_filters:
-       - "*STAR_picard_markduplicates.txt" 
-       - "*STAR_picard_rnaseqmetrics.txt"
- - "picard":
       name: "Picard - HISAT2"
       path_filters:
        - "*HISAT2_picard_markduplicates.txt" 
        - "*HISAT2_picard_rnaseqmetrics.txt"
+ - "picard":
+      name: "Picard - STAR, 1st pass"
+      path_filters:
+       - "*STAR_picard_markduplicates.txt" 
+       - "*STAR_picard_rnaseqmetrics.txt"
+- "picard":
+      name: "Picard - STAR, 2nd pass"
+      path_filters:
+       - "*STAR2_picard_markduplicates.txt" 
+       - "*STAR2_picard_rnaseqmetrics.txt"
+- "picard":
+      name: "Picard - BBMap"
+      path_filters:
+       - "*BBMap_picard_markduplicates.txt" 
+       - "*BBMap_picard_rnaseqmetrics.txt"
+- "picard":
+      name: "Picard - Subread"
+      path_filters:
+       - "*Subread_picard_markduplicates.txt" 
+       - "*Subread_picard_rnaseqmetrics.txt"
  - "featureCounts":
       name: "featureCounts - HISAT2"
       path_filters:
