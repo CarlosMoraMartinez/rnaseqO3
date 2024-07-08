@@ -27,10 +27,11 @@ process picardMarkDuplicates{
   mv !{bam} $newinputbam
   mv !{bai} $newinputbai
 
-  java -jar !{params.software.picard_path} MarkDuplicates \
+  java -Xms!{params.resources.picardRNASeqMetrics.mem}G -Xmx{params.resources.picardRNASeqMetrics.mem}G \
+              -jar !{params.software.picard_path} MarkDuplicates \
               --INPUT $newinputbam --OUTPUT $outbam !{params.picardMarkDuplicates.options} \
-               --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
-               --METRICS_FILE $outreport 2> $errorfile
+              --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
+              --METRICS_FILE $outreport 2> $errorfile
   
   mv $outbai $outbam'.bai'
   '''

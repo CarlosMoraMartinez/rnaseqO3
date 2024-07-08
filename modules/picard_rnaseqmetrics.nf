@@ -25,7 +25,8 @@ process picardRNASeqMetrics{
 
   mv !{bam} $newbamname
   mv !{bai} $newbainame
-  java -jar !{params.software.picard_path} CollectRnaSeqMetrics \
+  java -Xms!{params.resources.picardRNASeqMetrics.mem}G -Xmx{params.resources.picardRNASeqMetrics.mem}G \
+              -jar !{params.software.picard_path} CollectRnaSeqMetrics \
               I=$newbamname O=$outreport \
               REF_FLAT=!{refflat} !{params.picardRNASeqMetrics.options} \
               RIBOSOMAL_INTERVALS=!{rRNA_intervallist} \
