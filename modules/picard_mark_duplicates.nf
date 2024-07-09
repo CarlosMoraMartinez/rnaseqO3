@@ -23,11 +23,12 @@ process picardMarkDuplicates{
   outbam=!{sample_id}-!{flag}'.markdups.bam'
   errorfile=!{sample_id}-!{flag}_picard_markduplicates.err
   outbai=!{sample_id}-!{flag}'.markdups.bai'
+  mem=$(echo !{params.resources.picardMarkDuplicates.mem} | sed "s/ GB/G/")
 
   mv !{bam} $newinputbam
   mv !{bai} $newinputbai
 
-  java -Xms!{params.resources.picardRNASeqMetrics.mem}G -Xmx{params.resources.picardRNASeqMetrics.mem}G \
+  java -Xms$mem -Xmx$mem \
               -jar !{params.software.picard_path} MarkDuplicates \
               --INPUT $newinputbam --OUTPUT $outbam !{params.picardMarkDuplicates.options} \
               --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
