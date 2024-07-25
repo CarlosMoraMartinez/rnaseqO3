@@ -9,11 +9,11 @@ workflow QUANTIFY_WITH_HTSEQ {
   if(params.quantHTSeq.do_all_together){
     ch_alignment_all_grouped = ch_alignment_all
       .groupTuple(by: 0)
-      .map{it -> tuple(it[0], it[2].flatten(), it[3].flatten())}
+      .map{it -> tuple(it[0], "allsamples", it[2].flatten(), it[3].flatten())}
       .view{ "htseq input grouped: $it" }
   }else{
     ch_alignment_all_grouped = ch_alignment_all
-      .map{it -> tuple(it[0], it[2], it[3])}
+      .map{it -> tuple(it[0], it[1], it[2], it[3])}
       .view{ "htseq input not grouped: $it" }
   }
 
@@ -23,7 +23,7 @@ workflow QUANTIFY_WITH_HTSEQ {
                   .view{ "htseq modes combinations: $it" }
 
   ch_alignment_all_grouped2 = ch_htseq_mode.combine(ch_alignment_all_grouped)
-    //.view{ "htseq input COMBINED: $it" }
+    .view{ "htseq input COMBINED: $it" }
 
   // Call HTSeq only once with all samples
   quantHTSeq(ch_alignment_all_grouped2)
