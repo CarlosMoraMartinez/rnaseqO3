@@ -30,6 +30,7 @@ workflow CONTROL_QC{
 
   // 0. Picard markDuplicates
   ch_alignment_2_qual= ch_htseq_results
+  ch_alignment_markdups = Channel.from([])
   if(params.picardMarkDuplicates.do){
     picardMarkDuplicates(ch_alignment_all)
     ch_alignment_markdups = picardMarkDuplicates.out
