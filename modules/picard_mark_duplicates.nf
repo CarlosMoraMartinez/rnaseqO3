@@ -16,16 +16,24 @@ process picardMarkDuplicates{
 
   shell:
   '''
-  outreport=!{sample_id}-!{flag}_picard_markduplicates.txt
-  outbam=$(basename -s .bam !{bam})'.markdups.bam'
-  errorfile=!{sample_id}-!{flag}_picard_markduplicates.err
+  newinputbam=!{sample_id}_!{flag}'.sorted.bam'
+  newinputbai=$newinputbam.bai
 
-  java -jar !{params.software.picard_path} MarkDuplicates \
-              --INPUT !{bam} --OUTPUT $outbam !{params.picardMarkDuplicates.options} \
-               --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
-               --METRICS_FILE $outreport 2> $errorfile
+  outreport=!{sample_id}-!{flag}_picard_markduplicates.txt
+  outbam=!{sample_id}-!{flag}'.markdups.bam'
+  errorfile=!{sample_id}-!{flag}_picard_markduplicates.err
+  outbai=!{sample_id}-!{flag}'.markdups.bai'
+  mem=$(echo !{params.resources.picardMarkDuplicates.mem} | sed "s/ GB/G/")
+
+  mv !{bam} $newinputbam
+  mv !{bai} $newinputbai
+
+  java -Xms$mem -Xmx$mem \
+              -jar !{params.software.picard_path} MarkDuplicates \
+              --INPUT $newinputbam --OUTPUT $outbam !{params.picardMarkDuplicates.options} \
+              --CREATE_INDEX true --VALIDATION_STRINGENCY SILENT \
+              --METRICS_FILE $outreport 2> $errorfile
   
-  bai_created=$(basename -s .bam !{bam})'.markdups.bai'
-  mv $bai_created $outbam'.bai'
+  mv $outbai $outbam'.bai'
   '''
 }
