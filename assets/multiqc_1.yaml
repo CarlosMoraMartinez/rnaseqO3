@@ -1,7 +1,7 @@
 custom_logo: "/media/DATOS/BASESDATOS/logos_etc/Logo-IATA-CSIC.png"
-title: "Metagenomics"
+title: "RNA-seq Eva SD mice - Septiember 2025"
 subtitle: "Quality Report"
-comment: "Estudio de prueba para testar la pipeline"
+comment: "Run 1"
 report_header_info:
   - Contact E-mail: "carlos.mora@iata.csic.es"
   - Application Type: "RNA-seq"
