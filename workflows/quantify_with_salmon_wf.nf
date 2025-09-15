@@ -77,7 +77,7 @@ workflow QUANTIFY_WITH_SALMON {
     // First concatenate results from salmon mapping and alignment mode,
     // and use multimap to separate into a channel with sample names and another with results
     ch_salmon_aln_results_grouped = ch_salmon_result
-      .map{it -> tuple("salmon-"+ params.buildindexSalmon.mode, it[0], it[1])}
+      .map{it -> tuple("salmon-" + params.buildindexSalmon.mode, it[0], it[1])}
       .concat(ch_salmon_aln_result)
       .multiMap{it ->
             samplenames: tuple(it[0], tuple(it[1]))
